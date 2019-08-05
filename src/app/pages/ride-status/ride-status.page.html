@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color='primary'>
+      <ion-buttons slot="start">
+    <ion-button slot="start" (click)="presentModal()">
+        <ion-icon name="document"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+    <ion-title>Ride Status</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <div id='map_canvas'>
+
+  </div>
+  <ion-card text-center >
+      <ion-text> reach in 10 min </ion-text>
+    <ion-button expand="full" routerLink="/invoice">reached</ion-button>
+    </ion-card>
+</ion-content>

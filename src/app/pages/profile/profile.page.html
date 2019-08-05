@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-title >
+        Profile
+      </ion-title>
+      <ion-icon name="close" [routerLink]="['/home']" slot="start" class="cursor2"></ion-icon>
+      <ion-icon name="create" slot="end" class="cursor1" (click)="edit()"></ion-icon>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-grid>
+      <ion-card class="profileCard animated  bounceInDown">
+      <br>
+      <br>
+        <ion-row justify-content-center>
+            <ion-avatar class="profilepicsize">
+                <img src="/assets/images/profile3.jpeg">
+            </ion-avatar>
+        </ion-row>
+        <ion-row justify-content-center>
+            <ion-col size="6" size-sm="4">
+                <ion-item>
+                    <ion-label position="floating">Name</ion-label>
+                    <ion-input clear-on-edit="true" [(ngModel)]="user.name" readonly="{{readonly}}"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" >Email</ion-label>
+                    <ion-input clear-on-edit="true" [(ngModel)]="user.email" readonly="{{readonly}}"></ion-input>
+                </ion-item>
+            </ion-col>
+            <ion-col size="6" size-sm="4">
+                <ion-item>
+                    <ion-label position="floating">Last Name</ion-label>
+                    <ion-input clear-on-edit="true" readonly="{{readonly}}" [(ngModel)]="user.lastName" ></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Phone</ion-label>
+                    <ion-input clear-on-edit="true"  readonly="{{readonly}}"></ion-input>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-grid>
+    </ion-content>
+    

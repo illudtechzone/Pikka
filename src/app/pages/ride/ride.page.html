@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Choose Auto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="map_canvas"></div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar (click)="changeFooter()" color="primary">
+    <h4 text-center>Available Auto</h4>
+  </ion-toolbar>
+
+  <div *ngIf="vehicleList">
+    <ion-item class="card2">
+      <ion-card-subtitle>
+        About 1 km
+      </ion-card-subtitle>
+      <ion-button
+        *ngIf="!isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >request</ion-button
+      >
+      <ion-button
+        *ngIf="isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >progress</ion-button
+      >
+      <ion-button slot="end" expand="full">
+        cancel
+      </ion-button>
+    </ion-item>
+
+    <ion-item class="card2">
+      <ion-card-subtitle>
+        About 1.5 km
+      </ion-card-subtitle>
+      <ion-button
+        *ngIf="!isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >request</ion-button
+      >
+      <ion-button
+        *ngIf="isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >progress</ion-button
+      >
+      <ion-button slot="end" expand="full">
+        cancel
+      </ion-button>
+    </ion-item>
+
+    <ion-item class="card2">
+      <ion-card-subtitle>
+        About 2 km
+      </ion-card-subtitle>
+      <ion-button
+        *ngIf="!isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >request</ion-button
+      >
+      <ion-button
+        *ngIf="isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >progress</ion-button
+      >
+      <ion-button slot="end" expand="full">
+        cancel
+      </ion-button>
+    </ion-item>
+
+    <ion-item class="card2">
+      <ion-card-subtitle>
+        About 2.6 km
+      </ion-card-subtitle>
+      <ion-button
+        *ngIf="!isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >request</ion-button
+      >
+      <ion-button
+        *ngIf="isRequest"
+        slot="end"
+        (click)="requestVehicle()"
+        expand="full"
+        >progress</ion-button
+      >
+      <ion-button slot="end" expand="full">
+        cancel
+      </ion-button>
+    </ion-item>
+  </div>
+</ion-footer>

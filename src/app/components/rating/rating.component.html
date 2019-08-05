@@ -1,0 +1,6 @@
+<ion-buttons>
+    <ion-button [disabled]="readonly" *ngFor="let star of stars, let i = index" (click)="setRate(star)">
+      <ion-icon name="star" color="danger" *ngIf="rate >= star"></ion-icon>
+      <ion-icon name="star-outline" color="danger" *ngIf="rate < star"></ion-icon>
+    </ion-button>
+  </ion-buttons>

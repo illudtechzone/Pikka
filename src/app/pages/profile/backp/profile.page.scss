@@ -1,0 +1,37 @@
+.profileImage {
+    width: 35vw;
+    height: 35vw;
+    max-width: 150px;
+    max-height: 150px;
+    margin: auto;
+    border-radius: 49%;
+  }
+  .cursor1 {
+    font-size: larger;
+    position: relative;
+    padding-right: 13px;
+  }
+.profileCard{
+    margin-left: unset;
+    margin-right: unset;
+    -webkit-margin-start: 10px;
+    margin-inline-start: 10px;
+    -webkit-margin-end: 10px;
+    margin-inline-end: 10px;
+    height: 279px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 15px;
+  }
+  .profileButtons1{
+    padding-left: 10%;
+
+  }
+  .cursor2 {
+    font-size: larger;
+    position: relative;
+    padding-left: 13px;
+  }
+
+  .buttonHolder{
+   
+}

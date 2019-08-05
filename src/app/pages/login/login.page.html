@@ -1,0 +1,36 @@
+<ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Login</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+  
+        <ion-grid margin-top>
+            <ion-row justify-content-center>
+                <ion-avatar class="profilepicsize">
+                    <img src="/assets/images/profile3.jpeg">
+                </ion-avatar>
+            </ion-row>
+          <ion-row justify-content-center>
+            <ion-col text-center>
+              <ion-item class="item-inner">
+                <ion-label color="medium" position="floating">Username or Email</ion-label>
+                <ion-input [(ngModel)]="username" background="light"></ion-input>
+              </ion-item>
+              <ion-item class="item-inner">
+                <ion-label color="medium" position="floating">Password</ion-label>
+                <ion-input [(ngModel)]="password" type="password"></ion-input>
+              </ion-item>
+              <ion-button  (click)="login()" expand="block" margin-top margin-bottom>Login
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col text-center>
+              <ion-text>Dont have an Account? </ion-text>
+              <ion-text routerLink="/signup" class="cursor">Register</ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+  </ion-content>

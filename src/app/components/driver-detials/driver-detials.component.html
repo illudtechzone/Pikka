@@ -1,0 +1,66 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="dismiss()"><ion-icon name="close"></ion-icon></ion-button>
+      </ion-buttons>
+      <ion-title>
+        Driver Accepted
+      </ion-title>
+    </ion-toolbar>   
+  </ion-header>
+<ion-content>
+<ion-card>
+    <ion-item >
+      <ion-avatar class="profile">
+          <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+        </ion-avatar>
+      <ion-text>manu</ion-text>
+      </ion-item>
+      <ion-item lines="none">
+      
+          <ion-text slot="start">Stand:</ion-text>
+          <ion-text slot="end">Pathiripala</ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          
+          <ion-text slot="start">RegNo    :</ion-text>
+          <ion-text slot="end">Kl 90 AB 4545</ion-text>
+          </ion-item>
+          <ion-item>
+            <app-rating readOnly="true">
+
+            </app-rating>
+          </ion-item>
+          <ion-item>
+              <ion-icon name="text"></ion-icon>
+              <ion-text>10</ion-text>
+              <ion-icon name="arrow-dropdown" slot="end"></ion-icon>
+         </ion-item>
+            <ion-row>
+              <ion-col col-4>
+                  <ion-button expand=full>
+                      <ion-icon name ="call"></ion-icon>
+                 </ion-button> 
+              </ion-col>
+        
+              <ion-col col-4>
+                  <ion-button expand="full">
+                      <ion-icon name ="share"></ion-icon>
+                 </ion-button> 
+              </ion-col>
+              <ion-col col-4>
+                  <ion-button expand="full">
+                      <ion-icon name ="pin"></ion-icon>
+                 </ion-button> 
+              </ion-col>
+            </ion-row> 
+            <ion-row>
+            <ion-col col-4>
+                <ion-button expand="full" (click)="liveWatch()">
+                  <ion-text>Live Watch </ion-text>
+                    <ion-icon name ="eye"></ion-icon>
+               </ion-button> 
+            </ion-col>
+          </ion-row> 
+  </ion-card>
+</ion-content>

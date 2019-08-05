@@ -1,0 +1,27 @@
+<ion-header >
+  <ion-toolbar color="primary">
+    <ion-back-button></ion-back-button>
+    <ion-searchbar [value]="currentAdress"></ion-searchbar>
+        
+    <ion-searchbar></ion-searchbar>
+ 
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+<ion-card>
+  <ion-item>
+    <ion-card-title>
+      Favorite places
+    </ion-card-title>
+  </ion-item>
+</ion-card>
+<ion-card (click)="selectLocation()">
+  <ion-item>
+   <ion-icon name="pin"></ion-icon> 
+   <ion-text> Pathirippala kerala india</ion-text>
+  </ion-item>
+</ion-card>
+
+</ion-content>
