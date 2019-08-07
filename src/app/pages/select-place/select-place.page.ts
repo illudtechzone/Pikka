@@ -23,7 +23,7 @@ export class SelectPlacePage implements OnInit {
   }
   currentLocation() {
     this.geoLocation.getCurrentPosition().then((resp) => {
-            this.lat = predictionsresp.coords.latitude;
+            this.lat = resp.coords.latitude;
             this.lon = resp.coords.longitude;
             this.lat = 10.7800499;
             this.lon = 76.5231953;
