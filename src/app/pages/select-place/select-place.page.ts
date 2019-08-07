@@ -10,28 +10,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectPlacePage implements OnInit {
  currentAdress = '';
+ destination = '';
+ predictions : any =[{description:'no match'}];
   lon: number;
   lat: number;
   constructor(private geoLocation: Geolocation,
               private locationService: LocationService,
-              private navController:NavController) { }
+              private navController: NavController) { }
 
   ngOnInit() {
    this.currentLocation();
   }
   currentLocation() {
     this.geoLocation.getCurrentPosition().then((resp) => {
-            this.lat = resp.coords.latitude;
+            this.lat = predictionsresp.coords.latitude;
             this.lon = resp.coords.longitude;
-      // this.lat = 10.7800499;
-      // this.lon = 76.5231953;
+            this.lat = 10.7800499;
+            this.lon = 76.5231953;
     //  alert(resp.coords.latitude);
             this.locationService.getAddress(this.lat, this.lon).subscribe((result: any) => {
-      console.log('sucexsdfdfd>>>>>>xsss', result.results[0].address_components[0].long_name);
-      console.log('sucexsdfdfd>>>>>>xsss', result);
+
+      console.log('sucess geting location ', result);
+      if (result.status !=='OVER_QUERY_LIMIT') {
       this.currentAdress = result.results[0].formatted_address;
+      }
     }, err => {
-      console.log('sucerrorxxsss', err);
+      console.log('error while geting location', err);
 
     });
 
@@ -40,9 +44,21 @@ export class SelectPlacePage implements OnInit {
      });
   }
 
-  selectLocation()
-  {
+  selectLocation() {
     this.navController.navigateForward('/ride');
+  }
+
+  getLocationPrediction(event: any) {
+    console.log('evnet is ', event);
+    console.log('evnet is ', event.detail.value);
+    this.locationService.getPredictions(event.detail.value).subscribe((result: any) => {
+      console.log('result is ', result);
+      this.predictions = result;
+     },
+     err => {
+      console.log('error is ', err);
+     }
+     );
   }
 
 

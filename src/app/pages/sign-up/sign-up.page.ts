@@ -63,7 +63,7 @@ export class SignUpPage implements OnInit {
       }).catch((err: HttpErrorResponse) => {
         this.presentToast(err.error.error_description);
       });
-      this.navCtrl.navigateForward('/doc-upload');
+      this.navCtrl.navigateForward('/login');
     }, err => {
       console.log(err);
       this.presentToast('user already exists');

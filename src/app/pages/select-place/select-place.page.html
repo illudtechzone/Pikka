@@ -3,7 +3,7 @@
     <ion-back-button></ion-back-button>
     <ion-searchbar [value]="currentAdress"></ion-searchbar>
         
-    <ion-searchbar></ion-searchbar>
+    <ion-searchbar [value]="destination" (ionChange)="getLocationPrediction($event)" debounce="1000"></ion-searchbar>
  
   </ion-toolbar>
 
@@ -17,11 +17,12 @@
     </ion-card-title>
   </ion-item>
 </ion-card>
-<ion-card (click)="selectLocation()">
+<div *ngFor="let location of predictions" >
+<ion-card (click)="selectLocation()" >
   <ion-item>
-   <ion-icon name="pin"></ion-icon> 
-   <ion-text> Pathirippala kerala india</ion-text>
+   <ion-icon name="pin" slot="start"></ion-icon> 
+   <ion-text>{{location.description}}</ion-text>
   </ion-item>
 </ion-card>
-
+</div>
 </ion-content>

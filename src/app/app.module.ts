@@ -12,6 +12,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { MapsAPILoader, AgmCoreModule, GoogleMapsAPIWrapper} from '@agm/core';
 
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 @NgModule({
@@ -22,10 +23,15 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
     IonicModule.forRoot(),
     AppRoutingModule,
     OAuthModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAwC9dPmp280b4C18RBcGWjInRi9NGxo5c',
+      libraries: ['places', 'geometry']
+    }),
   ],
   providers: [
     Camera,
+    GoogleMapsAPIWrapper,
     Geolocation,
     StatusBar,
     SplashScreen,

@@ -32,17 +32,13 @@ export class AppComponent {
       url: '/profile',
       icon: 'contact'
     },
-    
+
     {
       title: 'Home',
       url: '/home',
       icon: 'home'
     },
-    {
-      title: 'Rider',
-      url: '/startride',
-      icon: 'contact'
-    },
+
     {
       title: 'Logout',
       url: '/',
@@ -54,7 +50,7 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private oauthService:OAuthService,
+    private oauthService: OAuthService,
     private toastController: ToastController,
     private navCtrl: NavController,
   ) {
