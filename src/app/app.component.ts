@@ -7,13 +7,13 @@ import { JwksValidationHandler, OAuthService, AuthConfig } from 'angular-oauth2-
 
 
 export const authConfig: AuthConfig = {
-  issuer: 'http://35.225.108.188:8020/auth/realms/RedAlert',
+  issuer: 'http://34.74.192.113:8888/auth/realms/RedAlert',
   redirectUri: window.location.origin,
   clientId: 'account',
   scope: 'openid profile email',
-  dummyClientSecret: '696583a4-a141-4b51-bf60-51371d121168',
-  tokenEndpoint: 'http://35.225.108.188:8020/auth/realms/RedAlert/protocol/openid-connect/token',
-  userinfoEndpoint: 'http://35.225.108.188:8020/auth/realms/RedAlert/protocol/openid-connect/userinfo',
+  dummyClientSecret: 'de33f012-48fc-43c0-bf57-c2472a61a614',
+  tokenEndpoint: 'http://34.74.192.113:8888/auth/realms/RedAlert/protocol/openid-connect/token',
+  userinfoEndpoint: 'http://34.74.192.113:8888/auth/realms/RedAlert/protocol/openid-connect/userinfo',
   oidc: false,
   requireHttps: false
 

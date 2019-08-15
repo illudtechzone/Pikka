@@ -13,7 +13,7 @@ export class SignUpPage implements OnInit {
   constructor(private navCtrl: NavController, private toastController: ToastController, private oauthService: OAuthService) {
     this.kcAdminClient = new KeycloakAdminClient();
     this.kcAdminClient.setConfig({
-      baseUrl: 'http://35.225.108.188:8020/auth'
+      baseUrl: 'http://34.74.192.113:8888/auth'
     });
     this.configureKeycloakAdmin();
   }
@@ -28,9 +28,10 @@ export class SignUpPage implements OnInit {
   configureKeycloakAdmin() {
     this.kcAdminClient.auth({
       username: 'admin',
-      password: 'admin',
+      password: 'admin999',
       grantType: 'password',
-      clientId: 'admin-cli'
+      clientId: 'admin-cli',
+      clientSecret: '7f8a027d-36dd-48fa-b09b-b26762029aa1',
     });
   }
 
@@ -65,7 +66,7 @@ export class SignUpPage implements OnInit {
       });
       this.navCtrl.navigateForward('/login');
     }, err => {
-      console.log(err);
+      console.log('error registering user',err);
       this.presentToast('user already exists');
     });
   }

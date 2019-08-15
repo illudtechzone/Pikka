@@ -19,22 +19,26 @@
         About 1 km
       </ion-card-subtitle>
       <ion-button
-        *ngIf="!isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >request</ion-button
+      *ngIf="!isRequest"
+      slot="end"
+      (click)="requestVehicle()"
+      expand="round" 
+      color="success"
       >
-      <ion-button
-        *ngIf="isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >progress</ion-button
-      >
-      <ion-button slot="end" expand="full">
-        cancel
-      </ion-button>
+      <ion-icon name="call"></ion-icon>
+      </ion-button
+    >
+    <ion-button
+      *ngIf="isRequest"
+      slot="end"
+      (click)="requestVehicle()"
+      expand="round"
+      >    <ion-icon name="timer"></ion-icon>
+      </ion-button
+    >
+    <ion-button slot="end" expand="round" color="danger">
+        <ion-icon name="close"></ion-icon>
+    </ion-button>
     </ion-item>
 
     <ion-item class="card2">
@@ -42,45 +46,26 @@
         About 1.5 km
       </ion-card-subtitle>
       <ion-button
-        *ngIf="!isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >request</ion-button
+      *ngIf="!isRequest"
+      slot="end"
+      (click)="requestVehicle()"
+      expand="round"
+      color="success"
       >
-      <ion-button
-        *ngIf="isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >progress</ion-button
-      >
-      <ion-button slot="end" expand="full">
-        cancel
-      </ion-button>
-    </ion-item>
-
-    <ion-item class="card2">
-      <ion-card-subtitle>
-        About 2 km
-      </ion-card-subtitle>
-      <ion-button
-        *ngIf="!isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >request</ion-button
-      >
-      <ion-button
-        *ngIf="isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >progress</ion-button
-      >
-      <ion-button slot="end" expand="full">
-        cancel
-      </ion-button>
+      <ion-icon name="call"></ion-icon>
+      </ion-button
+    >
+    <ion-button
+      *ngIf="isRequest"
+      slot="end"
+      (click)="requestVehicle()"
+      expand="round"
+      >    <ion-icon name="timer"></ion-icon>
+      </ion-button
+    >
+    <ion-button slot="end" expand="round" color="danger">
+        <ion-icon name="close"></ion-icon>
+    </ion-button>
     </ion-item>
 
     <ion-item class="card2">
@@ -88,22 +73,26 @@
         About 2.6 km
       </ion-card-subtitle>
       <ion-button
-        *ngIf="!isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >request</ion-button
+      *ngIf="!isRequest"
+      slot="end"
+      (click)="requestVehicle()"
+      expand="round"
+      color="success"
       >
-      <ion-button
-        *ngIf="isRequest"
-        slot="end"
-        (click)="requestVehicle()"
-        expand="full"
-        >progress</ion-button
-      >
-      <ion-button slot="end" expand="full">
-        cancel
-      </ion-button>
+      <ion-icon name="call"></ion-icon>
+      </ion-button
+    >
+    <ion-button
+      *ngIf="isRequest"
+      slot="end"
+      (click)="requestVehicle()"
+      expand="round"
+      >    <ion-icon name="timer"></ion-icon>
+      </ion-button
+    >
+    <ion-button slot="end" expand="round" color="danger">
+        <ion-icon name="close"></ion-icon>
+    </ion-button>
     </ion-item>
   </div>
 </ion-footer>

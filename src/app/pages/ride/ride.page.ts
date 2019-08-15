@@ -37,6 +37,7 @@ export class RidePage implements OnInit {
   }
   requestVehicle() {
     this.isRequest = !this.isRequest;
+    
     this.presentModal();
   }
   // map code start

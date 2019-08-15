@@ -1,9 +1,9 @@
 <ion-header >
   <ion-toolbar color="primary">
     <ion-back-button></ion-back-button>
-    <ion-searchbar [value]="currentAdress"></ion-searchbar>
+    <ion-searchbar [value]="routeLocation.fromAddress"  (ionChange)="getLocationPrediction($event,'from')" debounce="1000"></ion-searchbar>
         
-    <ion-searchbar [value]="destination" (ionChange)="getLocationPrediction($event)" debounce="1000"></ion-searchbar>
+    <ion-searchbar [value]="routeLocation.toAddress" (ionChange)="getLocationPrediction($event,'to')" debounce="1000"></ion-searchbar>
  
   </ion-toolbar>
 
@@ -18,11 +18,17 @@
   </ion-item>
 </ion-card>
 <div *ngFor="let location of predictions" >
-<ion-card (click)="selectLocation()" >
+<ion-card (click)="selectLocation(location)" >
   <ion-item>
    <ion-icon name="pin" slot="start"></ion-icon> 
    <ion-text>{{location.description}}</ion-text>
   </ion-item>
 </ion-card>
 </div>
+
 </ion-content>
+<ion-footer>
+  <ion-button expand='full' *ngIf="fromPlaceId!=='' && toPlaceId!==''" (click)="go()"> 
+    Go
+  </ion-button>
+</ion-footer>

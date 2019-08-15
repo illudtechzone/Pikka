@@ -32,7 +32,7 @@ export class LoginPage implements OnInit {
     },
     err=>{
       this.presentToast('An error occured');
-      console.log('error while create an new account');
+      console.log('error while logging ');
     });
   }
 

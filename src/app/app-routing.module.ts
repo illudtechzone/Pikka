@@ -13,13 +13,20 @@ const routes: Routes = [
     loadChildren: './home/home.module#HomePageModule',
     canActivate: [SecurityService]
   },
-  { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule' },
+  { path: 'profile', loadChildren: './pages/profile/profile.module#ProfilePageModule',
+  canActivate: [SecurityService]  },
   { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
-  { path: 'signup', loadChildren: './pages/sign-up/sign-up.module#SignUpPageModule' },
-  { path: 'invoice', loadChildren: './pages/invoice/invoice.module#InvoicePageModule' },
-  { path: 'select-place', loadChildren: './pages/select-place/select-place.module#SelectPlacePageModule' },
-  { path: 'ride', loadChildren: './pages/ride/ride.module#RidePageModule' },
-  { path: 'ride-status', loadChildren: './pages/ride-status/ride-status.module#RideStatusPageModule' }
+  { path: 'signup', loadChildren: './pages/sign-up/sign-up.module#SignUpPageModule'},
+
+  { path: 'invoice', loadChildren: './pages/invoice/invoice.module#InvoicePageModule',
+   canActivate: [SecurityService] },
+  { path: 'select-place', loadChildren: './pages/select-place/select-place.module#SelectPlacePageModule', 
+  canActivate: [SecurityService] },
+  { path: 'ride', loadChildren: './pages/ride/ride.module#RidePageModule'
+  //, canActivate: [SecurityService] 
+  },
+  { path: 'ride-status', loadChildren: './pages/ride-status/ride-status.module#RideStatusPageModule', 
+  canActivate: [SecurityService] }
 ];
 
 @NgModule({

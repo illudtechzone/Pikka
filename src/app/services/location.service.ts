@@ -36,7 +36,7 @@ export class LocationService {
   getAddress(lat: number, lon: number) {
     console.log('latitude ', lat);
     console.log('longitude ', lon);
-    return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lon + '&key=AIzaSyAwC9dPmp280b4C18RBcGWjInRi9NGxo5c');
+    return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lon + '&key=AIzaSyDE6vwyjr_HUlyzP6EU4rsNxd_xchtBA1o');
   }
 
   calculateDistance(from: any, to: any): number {
