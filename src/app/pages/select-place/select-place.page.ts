@@ -15,7 +15,7 @@ export class SelectPlacePage implements OnInit {
  fromPlaceId = '';
 
  boo: Boolean = true;
-
+taskid = '';
  toPlaceId = '';
  currentSearchBar = '';
  routeLocation: RouteLocations = new RouteLocations;
@@ -80,7 +80,6 @@ export class SelectPlacePage implements OnInit {
     this.locationService.getPredictions(event.detail.value).subscribe((result: any) => {
       console.log('result is locations ', result);
       this.predictions = result;
-      this.ionViewWillEnter();
      },
      err => {
       console.log('error is ', err);
@@ -89,31 +88,12 @@ export class SelectPlacePage implements OnInit {
   }
 
 go() {
+  console.log('intiating workflow');
   // tslint:disable-next-line: max-line-length
-  this.commandResource.initateWorkflowUsingPOST({pickUp: this.routeLocation.fromAddress, destination: this.routeLocation.toAddress}).subscribe(
+  this.commandResource.initateWorkflowUsingPOST().subscribe(
     result => {
-      console.log('sucessfuly started workflow ', result);
-
-      this.locationService.geocodeAddress(this.fromPlaceId).then(
-      result2 => {
-        console.log('#got log lat from place id', result2);
-        this.locationService.geocodeAddress(this.toPlaceId).then(
-          result3 => {
-            console.log('#got log lat from place id', result3);
-
-            this.navController.navigateForward('/ride');
-
-           }, err => {
-            console.log('#error geting log lat from place id', err);
-
-           });
-       }, err => {
-        console.log('#error geting log lat from place id', err);
-
-       });
-
-
-
+      console.log('sucessfuly started workflow with proces instance id', result);
+      this.getTask(result);
     },
     err => {
       console.log('error starting workflow ', err);
@@ -124,11 +104,14 @@ go() {
 
 }
 
-getTask(ProcessInstanceId: string) {
+getTask(processInstanceId: string) {
 
-  this.queryResource.getTasksUsingGET({}).subscribe(
-    result => {
+  this.queryResource.getTasksUsingGET({processInstanceId}).subscribe(
+    (result: any) => {
         console.log('sucess geting task', result);
+        console.log('task id ', result.data[0].id);
+        this.collectLocation(result.data[0].id);
+
     }, err => {
         console.log('error geting task', err);
     }
@@ -136,8 +119,37 @@ getTask(ProcessInstanceId: string) {
 
 }
 
-ionViewWillEnter() {
+  collectLocation(taskId: string) {
+    console.log('route location',this.routeLocation);
+     this.commandResource.collectRiderLocationDetailsUsingPOST({taskId, defaultInfoRequest: {destination: this.routeLocation.toAddress,
+    pickUp: this.routeLocation.fromAddress}}).subscribe(
+      (result: any) => {
+        console.log('sucess giving location info', result);
+        this.navController.navigateForward('/ride');
 
-}
+      },
+      err => {
+        console.log('error giving location info', err);
+      }
+    );
+
+  }
+  geoCodeAdress() {
+    this.locationService.geocodeAddress(this.fromPlaceId).then(
+      result2 => {
+        console.log('#got log lat from place id', result2);
+        this.locationService.geocodeAddress(this.toPlaceId).then(
+          result3 => {
+            console.log('#got log lat from place id', result3);
+
+           }, err => {
+            console.log('#error geting log lat from place id', err);
+
+           });
+       }, err => {
+        console.log('#error geting log lat from place id', err);
+
+       });
+  }
 
 }

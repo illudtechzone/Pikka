@@ -9,6 +9,7 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { PageOfDriver } from '../models/page-of-driver';
 import { DataResponse } from '../models/data-response';
+import { DefaultInfoRequest } from '../models/default-info-request';
 
 /**
  * Query Resource
@@ -19,6 +20,7 @@ import { DataResponse } from '../models/data-response';
 class QueryResourceService extends __BaseService {
   static readonly searchByNearestLocationUsingGETPath = '/api/query/findByNearestLocation/{latLon}/{kiloMeter}';
   static readonly getTasksUsingGETPath = '/api/query/tasks';
+  static readonly getBookingDetailsUsingGETPath = '/api/query/vehicle-booking-details/{processInstanceId}';
 
   constructor(
     config: __Configuration,
@@ -338,6 +340,42 @@ class QueryResourceService extends __BaseService {
   getTasksUsingGET(params: QueryResourceService.GetTasksUsingGETParams): __Observable<DataResponse> {
     return this.getTasksUsingGETResponse(params).pipe(
       __map(_r => _r.body as DataResponse)
+    );
+  }
+
+  /**
+   * @param processInstanceId processInstanceId
+   * @return OK
+   */
+  getBookingDetailsUsingGETResponse(processInstanceId: string): __Observable<__StrictHttpResponse<DefaultInfoRequest>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/query/vehicle-booking-details/${processInstanceId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DefaultInfoRequest>;
+      })
+    );
+  }
+  /**
+   * @param processInstanceId processInstanceId
+   * @return OK
+   */
+  getBookingDetailsUsingGET(processInstanceId: string): __Observable<DefaultInfoRequest> {
+    return this.getBookingDetailsUsingGETResponse(processInstanceId).pipe(
+      __map(_r => _r.body as DefaultInfoRequest)
     );
   }
 }

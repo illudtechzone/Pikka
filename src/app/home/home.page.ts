@@ -1,3 +1,4 @@
+import { LocationService } from './../services/location.service';
 import { NavController } from '@ionic/angular';
 import { Component } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -13,13 +14,16 @@ mapCanvas: GoogleMap;
 lat = 10.754090;
 lon = 76.547018;
   constructor(private geoLocation: Geolocation,
-              private navController: NavController) {}
+              private navController: NavController,
+              private locationService: LocationService) {}
 
   ionViewWillEnter() {
-    console.log('ion view will enter method');
+
     this.currentLocation();
+
     }
     currentLocation() {
+
       this.geoLocation.getCurrentPosition().then((resp) => {
 
         this.lat = resp.coords.latitude;
@@ -30,7 +34,9 @@ lon = 76.547018;
        }).catch((error) => {
          console.log('Error getting location', error);
        });
+      this.showMap();
     }
+
     showMap() {
 
         // This code is necessary for browser

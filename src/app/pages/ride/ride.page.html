@@ -13,70 +13,16 @@
     <h4 text-center>Available Auto</h4>
   </ion-toolbar>
 
-  <div *ngIf="vehicleList">
-    <ion-item class="card2">
+  <div *ngIf="isVehicleList">
+    <ion-item class="card2" *ngFor="let vehicle of vehiclesList" >
       <ion-card-subtitle>
-        About 1 km
+      {{vehicle.firstName}}
       </ion-card-subtitle>
       <ion-button
       *ngIf="!isRequest"
       slot="end"
-      (click)="requestVehicle()"
+      (click)="requestVehicle(vehicle)"
       expand="round" 
-      color="success"
-      >
-      <ion-icon name="call"></ion-icon>
-      </ion-button
-    >
-    <ion-button
-      *ngIf="isRequest"
-      slot="end"
-      (click)="requestVehicle()"
-      expand="round"
-      >    <ion-icon name="timer"></ion-icon>
-      </ion-button
-    >
-    <ion-button slot="end" expand="round" color="danger">
-        <ion-icon name="close"></ion-icon>
-    </ion-button>
-    </ion-item>
-
-    <ion-item class="card2">
-      <ion-card-subtitle>
-        About 1.5 km
-      </ion-card-subtitle>
-      <ion-button
-      *ngIf="!isRequest"
-      slot="end"
-      (click)="requestVehicle()"
-      expand="round"
-      color="success"
-      >
-      <ion-icon name="call"></ion-icon>
-      </ion-button
-    >
-    <ion-button
-      *ngIf="isRequest"
-      slot="end"
-      (click)="requestVehicle()"
-      expand="round"
-      >    <ion-icon name="timer"></ion-icon>
-      </ion-button
-    >
-    <ion-button slot="end" expand="round" color="danger">
-        <ion-icon name="close"></ion-icon>
-    </ion-button>
-    </ion-item>
-
-    <ion-item class="card2">
-      <ion-card-subtitle>
-        About 2.6 km
-      </ion-card-subtitle>
-      <ion-button
-      *ngIf="!isRequest"
-      slot="end"
-      (click)="requestVehicle()"
-      expand="round"
       color="success"
       >
       <ion-icon name="call"></ion-icon>

@@ -1,13 +1,12 @@
 export { DataResponse } from './models/data-response';
+export { DefaultInfoRequest } from './models/default-info-request';
 export { Driver } from './models/driver';
 export { DriverDTO } from './models/driver-dto';
-export { InitiateRide } from './models/initiate-ride';
 export { PageOfDriver } from './models/page-of-driver';
 export { PaymentStatus } from './models/payment-status';
 export { RateAndReview } from './models/rate-and-review';
 export { RideStatus } from './models/ride-status';
 export { RiderDTO } from './models/rider-dto';
-export { RiderLocationInfo } from './models/rider-location-info';
 export { RouteVM } from './models/route-vm';
 export { ServiceInstance } from './models/service-instance';
 export { Sort } from './models/sort';

@@ -1,3 +1,4 @@
+import { QueryResourceService } from 'src/app/api/services';
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { DriverDetialsComponent } from 'src/app/components/driver-detials/driver-detials.component';
@@ -13,14 +14,16 @@ export class RidePage implements OnInit {
 
   isRequest = false;
 
-  vehicleList = true;
+  isVehicleList = true;
   mapCanvas: GoogleMap;
   lat = 10.754090;
   lon = 76.547018;
+  vehiclesList: any[] = [];
 
   constructor(private geoLocation: Geolocation,
               private navController: NavController,
-              private modalController: ModalController) {}
+              private modalController: ModalController,
+              private quryResource: QueryResourceService) {}
   ngOnInit() {
   }
 
@@ -33,11 +36,11 @@ export class RidePage implements OnInit {
     return await modal.present();
   }
   changeFooter() {
-    this.vehicleList = !this.vehicleList;
+    this.isVehicleList = !this.isVehicleList;
   }
   requestVehicle() {
     this.isRequest = !this.isRequest;
-    
+
     this.presentModal();
   }
   // map code start
@@ -47,6 +50,9 @@ export class RidePage implements OnInit {
   ionViewWillEnter() {
     console.log('ion view will enter method');
     this.currentLocation();
+    this.getCordinates();
+
+
     }
 
     currentLocation() {
@@ -96,5 +102,37 @@ export class RidePage implements OnInit {
       alert('clicked');
     });
   }
+
+  getVehicles() {
+
+   const latlon = this.lat + ',' + this.lon;
+   this.quryResource.searchByNearestLocationUsingGET({latLon: latlon, kiloMeter: 5, size: 5}).subscribe(
+      (result: any) => {
+        console.log('GOT NEAREST DRIVERS ', result);
+        this.vehiclesList = result.content;
+      },
+      err => {
+        console.log('error NEAREST DRIVERS ', err);
+      }
+    );
+  }
+  getCordinates() {
+    this.geoLocation.getCurrentPosition().then((resp) => {
+
+      this.lat = resp.coords.latitude;
+      this.lon = resp.coords.longitude;
+      this.lat = 10.765354;
+      this.lon = 76.4813653;
+    //  alert(resp.coords.latitude)
+      this.getVehicles();
+
+  }).catch((err) => {
+    console.log('Error getting location', err);
+  }
+
+  );
 }
 
+
+
+}

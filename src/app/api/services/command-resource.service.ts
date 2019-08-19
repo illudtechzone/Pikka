@@ -7,10 +7,9 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-respo
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
+import { DefaultInfoRequest } from '../models/default-info-request';
 import { DriverDTO } from '../models/driver-dto';
 import { RiderDTO } from '../models/rider-dto';
-import { RiderLocationInfo } from '../models/rider-location-info';
-import { InitiateRide } from '../models/initiate-ride';
 import { PaymentStatus } from '../models/payment-status';
 import { RateAndReview } from '../models/rate-and-review';
 import { RideStatus } from '../models/ride-status';
@@ -22,6 +21,7 @@ import { RideStatus } from '../models/ride-status';
   providedIn: 'root',
 })
 class CommandResourceService extends __BaseService {
+  static readonly collectRiderLocationDetailsUsingPOSTPath = '/api/command/collectRiderLocationDetails/{taskId}';
   static readonly createDriverIfNotExistUsingPOSTPath = '/api/command/create/driver';
   static readonly createRiderIfNotExistUsingPOSTPath = '/api/command/create/rider';
   static readonly createDriverUsingPOSTPath = '/api/command/driver';
@@ -38,6 +38,49 @@ class CommandResourceService extends __BaseService {
     http: HttpClient
   ) {
     super(config, http);
+  }
+
+  /**
+   * @param params The `CommandResourceService.CollectRiderLocationDetailsUsingPOSTParams` containing the following parameters:
+   *
+   * - `taskId`: taskId
+   *
+   * - `defaultInfoRequest`: defaultInfoRequest
+   */
+  collectRiderLocationDetailsUsingPOSTResponse(params: CommandResourceService.CollectRiderLocationDetailsUsingPOSTParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __body = params.defaultInfoRequest;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/command/collectRiderLocationDetails/${params.taskId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+  /**
+   * @param params The `CommandResourceService.CollectRiderLocationDetailsUsingPOSTParams` containing the following parameters:
+   *
+   * - `taskId`: taskId
+   *
+   * - `defaultInfoRequest`: defaultInfoRequest
+   */
+  collectRiderLocationDetailsUsingPOST(params: CommandResourceService.CollectRiderLocationDetailsUsingPOSTParams): __Observable<null> {
+    return this.collectRiderLocationDetailsUsingPOSTResponse(params).pipe(
+      __map(_r => _r.body as null)
+    );
   }
 
   /**
@@ -149,14 +192,12 @@ class CommandResourceService extends __BaseService {
   }
 
   /**
-   * @param riderlocationInfo riderlocationInfo
    * @return OK
    */
-  initateWorkflowUsingPOSTResponse(riderlocationInfo: RiderLocationInfo): __Observable<__StrictHttpResponse<string>> {
+  initateWorkflowUsingPOSTResponse(): __Observable<__StrictHttpResponse<string>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __body = riderlocationInfo;
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/command/initiate`,
@@ -175,11 +216,10 @@ class CommandResourceService extends __BaseService {
     );
   }
   /**
-   * @param riderlocationInfo riderlocationInfo
    * @return OK
    */
-  initateWorkflowUsingPOST(riderlocationInfo: RiderLocationInfo): __Observable<string> {
-    return this.initateWorkflowUsingPOSTResponse(riderlocationInfo).pipe(
+  initateWorkflowUsingPOST(): __Observable<string> {
+    return this.initateWorkflowUsingPOSTResponse().pipe(
       __map(_r => _r.body as string)
     );
   }
@@ -189,14 +229,14 @@ class CommandResourceService extends __BaseService {
    *
    * - `taskId`: taskId
    *
-   * - `initiateRide`: initiateRide
+   * - `defaultInfoRequest`: defaultInfoRequest
    */
   collectInformationsUsingPOSTResponse(params: CommandResourceService.CollectInformationsUsingPOSTParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    __body = params.initiateRide;
+    __body = params.defaultInfoRequest;
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/command/initiateRide/${params.taskId}`,
@@ -219,7 +259,7 @@ class CommandResourceService extends __BaseService {
    *
    * - `taskId`: taskId
    *
-   * - `initiateRide`: initiateRide
+   * - `defaultInfoRequest`: defaultInfoRequest
    */
   collectInformationsUsingPOST(params: CommandResourceService.CollectInformationsUsingPOSTParams): __Observable<null> {
     return this.collectInformationsUsingPOSTResponse(params).pipe(
@@ -439,6 +479,22 @@ class CommandResourceService extends __BaseService {
 module CommandResourceService {
 
   /**
+   * Parameters for collectRiderLocationDetailsUsingPOST
+   */
+  export interface CollectRiderLocationDetailsUsingPOSTParams {
+
+    /**
+     * taskId
+     */
+    taskId: string;
+
+    /**
+     * defaultInfoRequest
+     */
+    defaultInfoRequest: DefaultInfoRequest;
+  }
+
+  /**
    * Parameters for collectInformationsUsingPOST
    */
   export interface CollectInformationsUsingPOSTParams {
@@ -449,9 +505,9 @@ module CommandResourceService {
     taskId: string;
 
     /**
-     * initiateRide
+     * defaultInfoRequest
      */
-    initiateRide: InitiateRide;
+    defaultInfoRequest: DefaultInfoRequest;
   }
 
   /**

@@ -15,12 +15,16 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MapsAPILoader, AgmCoreModule, GoogleMapsAPIWrapper} from '@agm/core';
 
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { AuthInterceptor } from './services/security/auth-interceptor';
+import { ConfigsModule } from './configs/configs.module';
+import { IonicStorageModule } from '@ionic/storage';
+import { UtilService } from './services/util.service';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
+    ConfigsModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     OAuthModule.forRoot(),
@@ -29,6 +33,10 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
       apiKey: 'AIzaSyAwC9dPmp280b4C18RBcGWjInRi9NGxo5c',
       libraries: ['places', 'geometry']
     }),
+    IonicStorageModule.forRoot({
+      name: '__mydb',
+      driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }),
   ],
   providers: [
     Camera,
@@ -36,10 +44,11 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     Geolocation,
     StatusBar,
     SplashScreen,
+    UtilService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptorService,
+      useClass: AuthInterceptor,
       multi: true
     }
   ],

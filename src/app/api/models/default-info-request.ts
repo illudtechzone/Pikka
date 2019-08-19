@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface RiderLocationInfo {
+export interface DefaultInfoRequest {
   destination?: string;
   distance?: string;
   pickUp?: string;
