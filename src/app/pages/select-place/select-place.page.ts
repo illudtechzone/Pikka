@@ -1,3 +1,4 @@
+import { ActivityService } from './../../services/activity.service';
 import { RouteLocations } from './../../dtos/route-locations';
 import { NavController } from '@ionic/angular';
 import { LocationService } from './../../services/location.service';
@@ -5,6 +6,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
 import { CommandResourceService, QueryResourceService } from 'src/app/api/services';
 import { log } from 'util';
+import { UtilService } from 'src/app/services/util.service';
 
 @Component({
   selector: 'app-select-place',
@@ -26,7 +28,9 @@ taskid = '';
               private locationService: LocationService,
               private navController: NavController,
               private commandResource: CommandResourceService,
-              private queryResource: QueryResourceService) { }
+              private queryResource: QueryResourceService,
+              private activityService:ActivityService,
+              private util:UtilService) { }
 
   ngOnInit() {
    this.currentLocation();
@@ -39,7 +43,7 @@ taskid = '';
             this.lat = 10.7800499;
             this.lon = 76.5231953;
     //  alert(resp.coords.latitude);
-            this.locationService.getAddress(this.lat, this.lon).subscribe((result: any) => {
+            this.locationService.getAddressFromLatLon(this.lat, this.lon).then((result: any) => {
 
       console.log('sucess geting location ', result);
       if (result.status !== 'OVER_QUERY_LIMIT') {
@@ -74,17 +78,22 @@ taskid = '';
 
 
   getLocationPrediction(event: any, searchBar: string) {
+    this.util.createLoader()
+      .then(loader => {
     this.currentSearchBar = searchBar;
     console.log('evnet is 2', event.detail.value);
 
     this.locationService.getPredictions(event.detail.value).subscribe((result: any) => {
       console.log('result is locations ', result);
       this.predictions = result;
+      loader.dismiss();
      },
      err => {
       console.log('error is ', err);
+      loader.dismiss();
      }
      );
+    });
   }
 
 go() {
@@ -93,6 +102,7 @@ go() {
   this.commandResource.initateWorkflowUsingPOST().subscribe(
     result => {
       console.log('sucessfuly started workflow with proces instance id', result);
+      this.activityService.setProcessInstanceId(result);
       this.getTask(result);
     },
     err => {
@@ -120,8 +130,8 @@ getTask(processInstanceId: string) {
 }
 
   collectLocation(taskId: string) {
-    console.log('route location',this.routeLocation);
-     this.commandResource.collectRiderLocationDetailsUsingPOST({taskId, defaultInfoRequest: {destination: this.routeLocation.toAddress,
+    console.log('route location', this.routeLocation);
+    this.commandResource.collectRiderLocationDetailsUsingPOST({taskId, defaultInfoRequest: {destination: this.routeLocation.toAddress,
     pickUp: this.routeLocation.fromAddress}}).subscribe(
       (result: any) => {
         console.log('sucess giving location info', result);

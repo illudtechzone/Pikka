@@ -32,13 +32,6 @@ export class LocationService {
                 });
 
                }
-
-  getAddress(lat: number, lon: number) {
-    console.log('latitude ', lat);
-    console.log('longitude ', lon);
-    return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lon + '&key=AIzaSyDE6vwyjr_HUlyzP6EU4rsNxd_xchtBA1o');
-  }
-
   calculateDistance(from: any, to: any): number {
     const distance = google.maps.geometry.spherical.computeDistanceBetween(
       from,
@@ -95,6 +88,23 @@ export class LocationService {
       console.log('Lat is inside geo ' + results[0].geometry.location.lat());
       console.log('Lon is inside geo ' + results[0].geometry.location.lng());
       resolve(latlon);
+      });
+    });
+  }
+
+  async getAddressFromLatLon(lat: any,lon:any): Promise<number[]> {
+
+    return new Promise<number[]>((resolve, reject) => {
+    let latlon: number[];
+    this.geocoder = new google.maps.Geocoder();
+    let latlng = {lat: parseFloat(lat), lng: parseFloat(lon)};
+    this.geocoder.geocode({'location':latlng}, async (results, status) => {
+      if (status !== 'OK') {
+        console.log('Geocoder failed due to: ' + status);
+        return;
+      }
+      console.log('result geocodeAddressFromLatLon ' + results);
+      resolve(results);
       });
     });
   }

@@ -2,6 +2,8 @@ export { DataResponse } from './models/data-response';
 export { DefaultInfoRequest } from './models/default-info-request';
 export { Driver } from './models/driver';
 export { DriverDTO } from './models/driver-dto';
+export { DriverInfo } from './models/driver-info';
+export { OpenBookings } from './models/open-bookings';
 export { PageOfDriver } from './models/page-of-driver';
 export { PaymentStatus } from './models/payment-status';
 export { RateAndReview } from './models/rate-and-review';

@@ -1,3 +1,4 @@
+import { CommandResourceService } from 'src/app/api/services';
 import { KeycloakService } from './../../services/security/keycloak.service';
 import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
@@ -16,13 +17,15 @@ export class SignUpPage implements OnInit {
   username: string;
   password: string;
   email: string;
+  phone:string;
 
   ngOnInit(): void {
 
   }
 
   constructor(private navCtrl: NavController, private util: UtilService,
-              private keycloakService: KeycloakService) {
+              private keycloakService: KeycloakService,
+              private commandResourceService:CommandResourceService) {
 
   }
   signup() {
@@ -33,6 +36,7 @@ export class SignUpPage implements OnInit {
         this.keycloakService.createAccount(user, this.password,
           (res) => {
             loader.dismiss();
+            this.createRider();
             this.navCtrl.navigateForward('/login');
           },
           (err) => {
@@ -48,93 +52,26 @@ export class SignUpPage implements OnInit {
   }
 
 
+  createRider() {
 
+    this.keycloakService.authenticate({ username: this.username, password: this.password },
+      () => {
+        console.log('user data ',this.email);
+        // tslint:disable-next-line: max-line-length
+        this.commandResourceService.createRiderIfNotExistUsingPOST({idpcode: this.username, firstName: this.firstName, mobilenumber: this.phone,email:this.email}).subscribe(res => {
+          console.log('created user in microservice ', res);
+          this.keycloakService.logout();
+          this.navCtrl.navigateForward('/login');
+        },
+        err => {
+          console.log('created user in microservice ', err);
+        });
+      },
+      () => {
+        this.util.createToast('an error occured');
+      });
+  }
 
-
-
-
-  // constructor(private navCtrl: NavController, private toastController: ToastController, private oauthService: OAuthService) {
-  //   this.kcAdminClient = new KeycloakAdminClient();
-  //   this.kcAdminClient.setConfig({
-  //     baseUrl: 'http://34.74.192.113:8888/auth'
-  //   });
-  //   this.configureKeycloakAdmin();
-  // }
-  // firstName: string;
-  // username: string;
-  // password: string;
-  // email: string;
-  // kcAdminClient: KeycloakAdminClient;
-  // phone: number;
-  // agreement: boolean;
-
-  // configureKeycloakAdmin() {
-  //   this.kcAdminClient.auth({
-  //     username: 'admin',
-  //     password: 'karma123',
-  //     grantType: 'password',
-  //     clientId: 'admin-cli',
-  //     clientSecret: '7f8a027d-36dd-48fa-b09b-b26762029aa1',
-  //   });
-  // }
-
-  // signup() {
-  //   console.log('sign up started');
-  //   const map = new Map([
-  //     ['phone', this.phone],
-  //     ['value', 3]
-  //   ]);
-
-  //   this.kcAdminClient.users.create({
-  //     realm: 'RedAlert',
-  //     username: this.username,
-  //     email: this.email,
-  //     enabled: true,
-  //     credentials: [{
-  //       type: 'password',
-  //       value: this.password
-  //     }],
-  //     attributes: map
-
-  //   }).then(res => {
-  //     this.oauthService.fetchTokenUsingPasswordFlowAndLoadUserProfile(this.username, this.password, new HttpHeaders()).then(() => {
-  //       const claims = this.oauthService.getIdentityClaims();
-  //       if (claims) { console.log(claims); }
-  //       if (this.oauthService.hasValidAccessToken()) {
-  //         this.presentToast('Signup successfully completed');
-  //         // this.navCtrl.navigateRoot('/sale');
-  //         console.log(this.username);
-  //       }
-  //     }).catch((err: HttpErrorResponse) => {
-  //       this.presentToast(err.error.error_description);
-  //     });
-  //     this.navCtrl.navigateForward('/doc-upload');
-  //   }, err => {
-  //     console.log(err);
-  //     this.presentToast('user already exists');
-  //   });
-  // }
-
-  // dataChanged(agreement) {
-  //   console.log('Old Agreement is ' + this.agreement);
-
-  //   console.log('Agreement is ' + agreement);
-  //   this.agreement = agreement;
-
-  // }
-
-  // async presentToast(message) {
-  //   const toast = await this.toastController.create({
-  //     message: message,
-  //     duration: 2000,
-  //     cssClass: 'toast'
-  //   });
-  //   await toast.present();
-  // }
-
-  // ngOnInit() {
-  //   this.agreement = false;
-  // }
 }
 
 

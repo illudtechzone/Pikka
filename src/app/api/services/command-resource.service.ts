@@ -10,6 +10,7 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { DefaultInfoRequest } from '../models/default-info-request';
 import { DriverDTO } from '../models/driver-dto';
 import { RiderDTO } from '../models/rider-dto';
+import { DriverInfo } from '../models/driver-info';
 import { PaymentStatus } from '../models/payment-status';
 import { RateAndReview } from '../models/rate-and-review';
 import { RideStatus } from '../models/ride-status';
@@ -25,8 +26,8 @@ class CommandResourceService extends __BaseService {
   static readonly createDriverIfNotExistUsingPOSTPath = '/api/command/create/driver';
   static readonly createRiderIfNotExistUsingPOSTPath = '/api/command/create/rider';
   static readonly createDriverUsingPOSTPath = '/api/command/driver';
+  static readonly driverResponseUsingPOSTPath = '/api/command/driverResponse/{taskId}';
   static readonly initateWorkflowUsingPOSTPath = '/api/command/initiate';
-  static readonly collectInformationsUsingPOSTPath = '/api/command/initiateRide/{taskId}';
   static readonly paymentUsingPOSTPath = '/api/command/payment/{taskId}';
   static readonly rateAndReviewUsingPOSTPath = '/api/command/rateAndReview/{taskId}';
   static readonly rideCompleteUsingPOSTPath = '/api/command/rideComplete/{taskId}';
@@ -192,6 +193,49 @@ class CommandResourceService extends __BaseService {
   }
 
   /**
+   * @param params The `CommandResourceService.DriverResponseUsingPOSTParams` containing the following parameters:
+   *
+   * - `taskId`: taskId
+   *
+   * - `driverInfo`: driverInfo
+   */
+  driverResponseUsingPOSTResponse(params: CommandResourceService.DriverResponseUsingPOSTParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __body = params.driverInfo;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/command/driverResponse/${params.taskId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+  /**
+   * @param params The `CommandResourceService.DriverResponseUsingPOSTParams` containing the following parameters:
+   *
+   * - `taskId`: taskId
+   *
+   * - `driverInfo`: driverInfo
+   */
+  driverResponseUsingPOST(params: CommandResourceService.DriverResponseUsingPOSTParams): __Observable<null> {
+    return this.driverResponseUsingPOSTResponse(params).pipe(
+      __map(_r => _r.body as null)
+    );
+  }
+
+  /**
    * @return OK
    */
   initateWorkflowUsingPOSTResponse(): __Observable<__StrictHttpResponse<string>> {
@@ -221,49 +265,6 @@ class CommandResourceService extends __BaseService {
   initateWorkflowUsingPOST(): __Observable<string> {
     return this.initateWorkflowUsingPOSTResponse().pipe(
       __map(_r => _r.body as string)
-    );
-  }
-
-  /**
-   * @param params The `CommandResourceService.CollectInformationsUsingPOSTParams` containing the following parameters:
-   *
-   * - `taskId`: taskId
-   *
-   * - `defaultInfoRequest`: defaultInfoRequest
-   */
-  collectInformationsUsingPOSTResponse(params: CommandResourceService.CollectInformationsUsingPOSTParams): __Observable<__StrictHttpResponse<null>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    __body = params.defaultInfoRequest;
-    let req = new HttpRequest<any>(
-      'POST',
-      this.rootUrl + `/api/command/initiateRide/${params.taskId}`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json'
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
-      })
-    );
-  }
-  /**
-   * @param params The `CommandResourceService.CollectInformationsUsingPOSTParams` containing the following parameters:
-   *
-   * - `taskId`: taskId
-   *
-   * - `defaultInfoRequest`: defaultInfoRequest
-   */
-  collectInformationsUsingPOST(params: CommandResourceService.CollectInformationsUsingPOSTParams): __Observable<null> {
-    return this.collectInformationsUsingPOSTResponse(params).pipe(
-      __map(_r => _r.body as null)
     );
   }
 
@@ -495,9 +496,9 @@ module CommandResourceService {
   }
 
   /**
-   * Parameters for collectInformationsUsingPOST
+   * Parameters for driverResponseUsingPOST
    */
-  export interface CollectInformationsUsingPOSTParams {
+  export interface DriverResponseUsingPOSTParams {
 
     /**
      * taskId
@@ -505,9 +506,9 @@ module CommandResourceService {
     taskId: string;
 
     /**
-     * defaultInfoRequest
+     * driverInfo
      */
-    defaultInfoRequest: DefaultInfoRequest;
+    driverInfo: DriverInfo;
   }
 
   /**

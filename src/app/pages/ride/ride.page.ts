@@ -1,4 +1,5 @@
-import { QueryResourceService } from 'src/app/api/services';
+import { ActivityService } from './../../services/activity.service';
+import { QueryResourceService, CommandResourceService } from 'src/app/api/services';
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { DriverDetialsComponent } from 'src/app/components/driver-detials/driver-detials.component';
@@ -19,12 +20,15 @@ export class RidePage implements OnInit {
   lat = 10.754090;
   lon = 76.547018;
   vehiclesList: any[] = [];
-
+  processInstanceId= '';
   constructor(private geoLocation: Geolocation,
               private navController: NavController,
               private modalController: ModalController,
-              private quryResource: QueryResourceService) {}
+              private quryResource: QueryResourceService,
+              private commandResourceService: CommandResourceService,
+              private activityService: ActivityService) {}
   ngOnInit() {
+    this.activityService.getProcessInstanceId();
   }
 
 
@@ -39,38 +43,32 @@ export class RidePage implements OnInit {
     this.isVehicleList = !this.isVehicleList;
   }
   requestVehicle() {
-    this.isRequest = !this.isRequest;
 
-    this.presentModal();
+    this.quryResource.getTasksUsingGET({processInstanceId: this.processInstanceId}).subscribe((result: any) => {
+      console.log(' geting tasks', result);
+    },
+    err => {
+      console.log('error geting tasks', err);
+    });
+
   }
-  // map code start
 
-
+// chooseDriver(taskId:string){
+//   this.isRequest = !this.isRequest;
+//   this.commandResourceService.chooseDriverUsingPOST({taskId:taskId,driverInfo:{}}).subscribe((result:any)=>{
+//     this.isRequest = !this.isRequest;
+//   });
+// }
+ // map code start
 
   ionViewWillEnter() {
     console.log('ion view will enter method');
-    this.currentLocation();
     this.getCordinates();
-
+    this.showMap();
 
     }
-
-    currentLocation() {
-      this.geoLocation.getCurrentPosition().then((resp) => {
-
-        this.lat = resp.coords.latitude;
-        this.lon = resp.coords.longitude;
-      //  alert(resp.coords.latitude);
-        this.showMap();
-
-       }).catch((error) => {
-         console.log('Error getting location', error);
-       });
-    }
-
     showMap() {
 
-        // This code is necessary for browser
       console.log('loadMap');
 
       Environment.setEnv({
@@ -89,24 +87,21 @@ export class RidePage implements OnInit {
         };
       this.mapCanvas = GoogleMaps.create('map_canvas', mapOptions);
       const marker: Marker = this.mapCanvas.addMarkerSync({
-      title: 'newyork city',
+      title: 'newyork currentLocation',
       icon : 'red',
       animation: 'DROP',
       position: {
-        lat: this.lat,
-        lng: this.lon,
+        lat:this.lat,
+        lng:this.lon,
 
       }
-    });
-      marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
-      alert('clicked');
     });
   }
 
   getVehicles() {
 
    const latlon = this.lat + ',' + this.lon;
-   this.quryResource.searchByNearestLocationUsingGET({latLon: latlon, kiloMeter: 5, size: 5}).subscribe(
+   this.quryResource.searchByNearestLocationUsingGET({latLon: latlon, kiloMeter: 10, size: 5}).subscribe(
       (result: any) => {
         console.log('GOT NEAREST DRIVERS ', result);
         this.vehiclesList = result.content;
@@ -121,10 +116,6 @@ export class RidePage implements OnInit {
 
       this.lat = resp.coords.latitude;
       this.lon = resp.coords.longitude;
-      this.lat = 10.765354;
-      this.lon = 76.4813653;
-    //  alert(resp.coords.latitude)
-      this.getVehicles();
 
   }).catch((err) => {
     console.log('Error getting location', err);

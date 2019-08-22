@@ -1,9 +1,9 @@
 <ion-header >
   <ion-toolbar color="primary">
     <ion-back-button></ion-back-button>
-    <ion-searchbar [value]="routeLocation.fromAddress"  (ionChange)="getLocationPrediction($event,'from')" debounce="1000"></ion-searchbar>
+    <ion-searchbar  placeholder="from" [value]="routeLocation.fromAddress"  (ionChange)="getLocationPrediction($event,'from')" debounce="1000"></ion-searchbar>
         
-    <ion-searchbar [value]="routeLocation.toAddress" (ionChange)="getLocationPrediction($event,'to')" debounce="1000"></ion-searchbar>
+    <ion-searchbar placeholder="to" [value]="routeLocation.toAddress" (ionChange)="getLocationPrediction($event,'to')" debounce="1000"></ion-searchbar>
  
   </ion-toolbar>
 
