@@ -18,7 +18,7 @@ export class LocationService {
 
   private currentLat: number;
   private currentLon: number;
-  private geocoder: any;
+  private geocoder: any; 
 
 
   constructor(private http: HttpClient,

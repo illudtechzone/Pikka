@@ -1,31 +1,23 @@
 <ion-header >
   <ion-toolbar color="primary">
-    <ion-back-button></ion-back-button>
-    <ion-searchbar id="from" placeholder="from" [value]="routeLocation.fromAddress"  (ionChange)="getLocationPrediction($event,'from')" debounce="1000"></ion-searchbar>
-        
-    <ion-searchbar id="to" placeholder="to" [value]="routeLocation.toAddress" (ionChange)="getLocationPrediction($event,'to')" debounce="1000"></ion-searchbar>
- 
+    <ion-buttons>    <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-searchbar [(ngModel)]="routeLocation.fromAddress" (ionChange)="updateSearchResults('from')" placeholder="from" debounce="1000"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="routeLocation.toAddress" (ionChange)="updateSearchResults('to')" placeholder="to" debounce="1000"></ion-searchbar>
   </ion-toolbar>
 
 </ion-header>
 
 <ion-content>
-<ion-card>
-  <ion-item>
-    <ion-card-title>
-      Favorite places
-    </ion-card-title>
-  </ion-item>
-</ion-card>
-<div *ngFor="let location of predictions" >
-<ion-card (click)="selectLocation(location)" >
-  <ion-item>
-   <ion-icon name="pin" slot="start"></ion-icon> 
-   <ion-text>{{location.description}}</ion-text>
-  </ion-item>
-</ion-card>
-</div>
 
+    <ion-list [hidden]="autocompleteItems.length == 0">
+        <ion-card *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+          <ion-item>
+              <ion-icon name="pin" slot="start"></ion-icon> 
+              <ion-text>{{item.description}}</ion-text>
+             </ion-item>
+        </ion-card>
+      </ion-list>
 </ion-content>
 <ion-footer>
   <ion-button expand='full' *ngIf="fromPlaceId!=='' && toPlaceId!==''" (click)="go()"> 

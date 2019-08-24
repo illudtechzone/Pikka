@@ -4,27 +4,30 @@ import { RouteLocations } from './../../dtos/route-locations';
 import { NavController } from '@ionic/angular';
 import { LocationService } from './../../services/location.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommandResourceService, QueryResourceService } from 'src/app/api/services';
 import { log } from 'util';
 import { UtilService } from 'src/app/services/util.service';
-
+declare var google: any;
 @Component({
   selector: 'app-select-place',
   templateUrl: './select-place.page.html',
   styleUrls: ['./select-place.page.scss'],
 })
 export class SelectPlacePage implements OnInit {
+  GoogleAutocomplete: any;
+autocomplete: any;
+autocompleteItems = [];
  fromPlaceId = '';
-
- boo: Boolean = true;
-taskid = '';
+ boo = true;
+  taskid = '';
  toPlaceId = '';
  currentSearchBar = '';
  routeLocation: RouteLocations = new RouteLocations;
  predictions: any = [{description: 'no match'}];
   lon: number;
   lat: number;
+
   constructor(private geoLocation: Geolocation,
               private locationService: LocationService,
               private navController: NavController,
@@ -32,7 +35,55 @@ taskid = '';
               private queryResource: QueryResourceService,
               private activityService: ActivityService,
               private util: UtilService,
-              private currentUserService: CurrentUserService) { }
+              private currentUserService: CurrentUserService,
+              private zone: NgZone) {
+
+                this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+                this.autocomplete = { input: '' };
+                this.autocompleteItems = [];
+
+              }
+
+//// auto complete//////////
+
+updateSearchResults(searchBar: string) {
+  this.currentSearchBar = searchBar;
+  if (this.autocomplete.input == '') {
+    this.autocompleteItems = [];
+    return;
+  }
+  this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+	(predictions, status) => {
+    this.autocompleteItems = [];
+    this.zone.run(() => {
+      predictions.forEach((prediction) => {
+        this.autocompleteItems.push(prediction);
+      });
+    });
+  });
+}
+
+
+
+
+selectSearchResult(item: any) {
+
+  console.log('selected item is ', item.description);
+
+  if (this.currentSearchBar === 'from') {
+    this.routeLocation.fromAddress = item.description;
+    this.fromPlaceId = item.place_id;
+  } else {
+    this.routeLocation.toAddress = item.description;
+    this.toPlaceId = item.place_id;
+  }
+  console.log('current route is ', this.routeLocation);
+
+}
+
+
+/////////////////////////////////
+
 
   ngOnInit() {
    this.currentLocation();
@@ -40,12 +91,10 @@ taskid = '';
 
   currentLocation() {
     this.geoLocation.getCurrentPosition().then((resp) => {
-            this.lat = resp.coords.latitude;
-            this.lon = resp.coords.longitude;
-            this.lat = 10.7800499;
-            this.lon = 76.5231953;
-    //  alert(resp.coords.latitude);
-            this.locationService.getAddressFromLatLon(this.lat, this.lon).then((result: any) => {
+      console.log('current loaction ', resp);
+      this.lat = resp.coords.latitude;
+      this.lon = resp.coords.longitude;
+      this.locationService.getAddressFromLatLon(this.lat, this.lon).then((result: any) => {
 
       console.log('sucess geting location ', result);
       if (result.status !== 'OVER_QUERY_LIMIT') {
@@ -61,42 +110,6 @@ taskid = '';
      });
   }
 
-  selectLocation(location: any) {
-    this.boo = !this.boo;
-    console.log('# selected location ', location.place_id);
-    if (this.currentSearchBar === 'from') {
-      this.routeLocation.fromAddress = location.description;
-      this.fromPlaceId = location.place_id;
-    } else {
-      this.routeLocation.toAddress = location.description;
-      this.toPlaceId = location.place_id;
-    }
-
-
-    console.log(this.routeLocation.fromAddress, this.routeLocation.toAddress, ' selected locations #');
-
-  }
-
-
-
-  getLocationPrediction(event: any, searchBar: string) {
-    this.util.createLoader()
-      .then(loader => {
-    this.currentSearchBar = searchBar;
-    console.log('evnet is 2', event.detail.value);
-
-    this.locationService.getAdressPredictions(event.detail.value).subscribe((result: any) => {
-      console.log('result is locations ', result);
-      this.predictions = result;
-      loader.dismiss();
-     },
-     err => {
-      console.log('error is ', err);
-      loader.dismiss();
-     }
-     );
-    });
-  }
 
 go() {
   this.util.createLoader()
@@ -160,6 +173,7 @@ getTask(processInstanceId: string) {
     );
     });
   }
+
   geoCodeAdress() {
     this.locationService.geocodeAddress(this.fromPlaceId).then(
       result2 => {
