@@ -13,6 +13,7 @@ import { RiderDTO } from '../models/rider-dto';
 import { DriverInfo } from '../models/driver-info';
 import { PaymentStatus } from '../models/payment-status';
 import { RateAndReview } from '../models/rate-and-review';
+import { RideDTO } from '../models/ride-dto';
 import { RideStatus } from '../models/ride-status';
 
 /**
@@ -30,6 +31,7 @@ class CommandResourceService extends __BaseService {
   static readonly initateWorkflowUsingPOSTPath = '/api/command/initiate';
   static readonly paymentUsingPOSTPath = '/api/command/payment/{taskId}';
   static readonly rateAndReviewUsingPOSTPath = '/api/command/rateAndReview/{taskId}';
+  static readonly sendRequestToDriverUsingPOSTPath = '/api/command/request/driver';
   static readonly rideCompleteUsingPOSTPath = '/api/command/rideComplete/{taskId}';
   static readonly startRideUsingPOSTPath = '/api/command/startRide/{taskId}';
   static readonly updateDriverUsingPUTPath = '/api/command/update/driver';
@@ -351,6 +353,42 @@ class CommandResourceService extends __BaseService {
   rateAndReviewUsingPOST(params: CommandResourceService.RateAndReviewUsingPOSTParams): __Observable<null> {
     return this.rateAndReviewUsingPOSTResponse(params).pipe(
       __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * @param rideDto rideDto
+   * @return OK
+   */
+  sendRequestToDriverUsingPOSTResponse(rideDto: RideDTO): __Observable<__StrictHttpResponse<string>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = rideDto;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/command/request/driver`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<string>;
+      })
+    );
+  }
+  /**
+   * @param rideDto rideDto
+   * @return OK
+   */
+  sendRequestToDriverUsingPOST(rideDto: RideDTO): __Observable<string> {
+    return this.sendRequestToDriverUsingPOSTResponse(rideDto).pipe(
+      __map(_r => _r.body as string)
     );
   }
 

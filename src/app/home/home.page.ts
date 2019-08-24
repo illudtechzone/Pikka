@@ -1,6 +1,6 @@
 import { LocationService } from './../services/location.service';
 import { NavController } from '@ionic/angular';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GoogleMap, Environment, GoogleMapOptions, GoogleMaps, Marker, GoogleMapsEvent} from '@ionic-native/google-maps';
 @Component({
@@ -8,20 +8,25 @@ import { GoogleMap, Environment, GoogleMapOptions, GoogleMaps, Marker, GoogleMap
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit{
+  constructor(private geoLocation: Geolocation,
+              private navController: NavController,
+              private locationService: LocationService,) {}
   status: Boolean = false;
 mapCanvas: GoogleMap;
 lat = 10.754090;
 lon = 76.547018;
-  constructor(private geoLocation: Geolocation,
-              private navController: NavController,
-              private locationService: LocationService) {}
 
-  ionViewWillEnter() {
 
+  
+ngOnInit() {
+
+  console.log('ion Init method');
     this.currentLocation();
 
-    }
+
+  }
+
     currentLocation() {
 
       this.geoLocation.getCurrentPosition().then((resp) => {
@@ -43,8 +48,8 @@ lon = 76.547018;
       console.log('loadMap');
 
       Environment.setEnv({
-          API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyAwC9dPmp280b4C18RBcGWjInRi9NGxo5c',
-          API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyAwC9dPmp280b4C18RBcGWjInRi9NGxo5c'
+          API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyDTGidFqTY4Tv-EXCev5PTowNGrqj4v6Y4',
+          API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyDTGidFqTY4Tv-EXCev5PTowNGrqj4v6Y4'
         });
       const mapOptions: GoogleMapOptions = {
           camera: {

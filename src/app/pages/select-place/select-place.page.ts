@@ -1,3 +1,4 @@
+import { CurrentUserService } from './../../services/current-user.service';
 import { ActivityService } from './../../services/activity.service';
 import { RouteLocations } from './../../dtos/route-locations';
 import { NavController } from '@ionic/angular';
@@ -29,8 +30,9 @@ taskid = '';
               private navController: NavController,
               private commandResource: CommandResourceService,
               private queryResource: QueryResourceService,
-              private activityService:ActivityService,
-              private util:UtilService) { }
+              private activityService: ActivityService,
+              private util: UtilService,
+              private currentUserService: CurrentUserService) { }
 
   ngOnInit() {
    this.currentLocation();
@@ -83,7 +85,7 @@ taskid = '';
     this.currentSearchBar = searchBar;
     console.log('evnet is 2', event.detail.value);
 
-    this.locationService.getPredictions(event.detail.value).subscribe((result: any) => {
+    this.locationService.getAdressPredictions(event.detail.value).subscribe((result: any) => {
       console.log('result is locations ', result);
       this.predictions = result;
       loader.dismiss();
@@ -97,6 +99,8 @@ taskid = '';
   }
 
 go() {
+  this.util.createLoader()
+  .then(loader => {
   console.log('intiating workflow');
   // tslint:disable-next-line: max-line-length
   this.commandResource.initateWorkflowUsingPOST().subscribe(
@@ -104,45 +108,57 @@ go() {
       console.log('sucessfuly started workflow with proces instance id', result);
       this.activityService.setProcessInstanceId(result);
       this.getTask(result);
+      loader.dismiss();
     },
     err => {
       console.log('error starting workflow ', err);
-
+      loader.dismiss();
     }
   );
+  });
+
 
 
 }
 
 getTask(processInstanceId: string) {
-
+  this.util.createLoader()
+  .then(loader => {
   this.queryResource.getTasksUsingGET({processInstanceId}).subscribe(
     (result: any) => {
         console.log('sucess geting task', result);
         console.log('task id ', result.data[0].id);
         this.collectLocation(result.data[0].id);
-
+        loader.dismiss();
     }, err => {
         console.log('error geting task', err);
+        loader.dismiss();
     }
   );
-
+  });
 }
 
   collectLocation(taskId: string) {
-    console.log('route location', this.routeLocation);
-    this.commandResource.collectRiderLocationDetailsUsingPOST({taskId, defaultInfoRequest: {destination: this.routeLocation.toAddress,
+    this.util.createLoader()
+    .then(loader => {
+      loader.present();
+      console.log('route location', this.routeLocation);
+      this.currentUserService.setRoute(this.routeLocation);
+      this.commandResource.collectRiderLocationDetailsUsingPOST({taskId, defaultInfoRequest: {destination: this.routeLocation.toAddress,
     pickUp: this.routeLocation.fromAddress}}).subscribe(
       (result: any) => {
         console.log('sucess giving location info', result);
         this.navController.navigateForward('/ride');
+        loader.dismiss();
 
       },
       err => {
         console.log('error giving location info', err);
+        loader.dismiss();
+
       }
     );
-
+    });
   }
   geoCodeAdress() {
     this.locationService.geocodeAddress(this.fromPlaceId).then(

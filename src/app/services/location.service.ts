@@ -7,13 +7,14 @@ import { MapsAPILoader, GoogleMapsAPIWrapper } from '@agm/core';
 import { Observable } from 'rxjs';
 
 declare var google: any;
+
 @Injectable({
   providedIn: 'root'
 })
 export class LocationService {
 
-
-  autoCompleteService: any;
+  private  placeSearch;
+  private  autocomplete:any;
 
   private currentLat: number;
   private currentLon: number;
@@ -28,7 +29,6 @@ export class LocationService {
 
                 console.log('Constror service location');
                 this.mapsAPILoader.load().then(() => {
-                  this.autoCompleteService = new google.maps.places.AutocompleteService();
                 });
 
                }
@@ -44,31 +44,31 @@ export class LocationService {
     return this.geolocation.getCurrentPosition();
   }
 
-  getPredictions(searchTerm: string): Observable<any[]> {
-    console.log('In the service location ');
-    return new Observable(observer => {
-      this.autoCompleteService.getPlacePredictions(
-        { input: searchTerm },
-        data => {
-          let previousData: Array<any[]>;
-          if (data) {
-            console.log(data);
-            previousData = data;
-            observer.next(data);
-            observer.complete();
-          }
+  // getPredictions(searchTerm: string): Observable<any[]> {
+  //   console.log('In the service location ');
+  //   return new Observable(observer => {
+  //     this.autoCompleteService.getPlacePredictions(
+  //       { input: searchTerm },
+  //       data => {
+  //         let previousData: Array<any[]>;
+  //         if (data) {
+  //           console.log(data);
+  //           previousData = data;
+  //           observer.next(data);
+  //           observer.complete();
+  //         }
 
-          if (!data) {
-            console.log('PreviousData: ');
-            observer.next(previousData);
-            observer.complete();
-          } else {
-            observer.error(status);
-          }
-        }
-      );
-    });
-  }
+  //         if (!data) {
+  //           console.log('PreviousData: ');
+  //           observer.next(previousData);
+  //           observer.complete();
+  //         } else {
+  //           observer.error(status);
+  //         }
+  //       }
+  //     );
+  //   });
+  // }
 
   async geocodeAddress(placeId: string): Promise<number[]> {
 
@@ -106,6 +106,21 @@ export class LocationService {
       console.log('result geocodeAddressFromLatLon ' + results);
       resolve(results);
       });
+    });
+  }
+  
+  getAdressPredictions(searchTerm: string): Observable<any[]> {
+    console.log('In the service location ');
+    return new Observable(observer => {
+ 
+      var options = {
+        types: ['(cities)'],
+        componentRestrictions: {country: 'in'}
+      };
+      
+      this.autocomplete = new google.maps.places.Autocomplete();
+      console.log('predictions ',this.autocomplete.getPlacePredictions());
+
     });
   }
 

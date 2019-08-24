@@ -1,3 +1,4 @@
+import { RouteLocations } from './../dtos/route-locations';
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 
@@ -6,8 +7,11 @@ import { OAuthService } from 'angular-oauth2-oidc';
 })
 export class CurrentUserService {
   user: any;
+  routeLocation: RouteLocations = new RouteLocations();
+
   constructor(private oathservice: OAuthService) {}
-  getCurrentUser(force: Boolean): Promise<any> {
+
+  getCurrentUser(force: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
       if (this.user == null || force) {
         this.oathservice.loadUserProfile().then(
@@ -26,4 +30,14 @@ export class CurrentUserService {
       }
     });
   }
+
+  setRoute(route:any){
+
+    this.routeLocation=route;
+
+  }
+  getRoute():any{
+    return this.routeLocation;
+  }
+
 }

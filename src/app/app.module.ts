@@ -19,6 +19,7 @@ import { AuthInterceptor } from './services/security/auth-interceptor';
 import { ConfigsModule } from './configs/configs.module';
 import { IonicStorageModule } from '@ionic/storage';
 import { UtilService } from './services/util.service';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -30,7 +31,7 @@ import { UtilService } from './services/util.service';
     OAuthModule.forRoot(),
     HttpClientModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAwC9dPmp280b4C18RBcGWjInRi9NGxo5c',
+      apiKey: 'AIzaSyDTGidFqTY4Tv-EXCev5PTowNGrqj4v6Y4',
       libraries: ['places', 'geometry']
     }),
     IonicStorageModule.forRoot({
@@ -39,6 +40,7 @@ import { UtilService } from './services/util.service';
     }),
   ],
   providers: [
+
     Camera,
     GoogleMapsAPIWrapper,
     Geolocation,

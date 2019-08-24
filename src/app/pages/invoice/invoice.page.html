@@ -20,11 +20,11 @@
             
               <ion-item lines="none">
                 <ion-text slot="start">From     :</ion-text>
-                <ion-text slot="end"> mankara</ion-text>
+                <ion-text slot="end"> {{route.fromAdress}}</ion-text>
               </ion-item>
               <ion-item lines="none">
                 <ion-text slot="start">To       :</ion-text>
-                <ion-text slot="end">Pathiripala junction</ion-text>
+                <ion-text slot="end">{{route.toAdress}}</ion-text>
               </ion-item>
               <ion-item lines="none">
                 <ion-text slot="start">Distance :</ion-text>
@@ -54,7 +54,7 @@
 
           </app-rating>
           <ion-input placeholder=" write about the ride"></ion-input>
-          <ion-button routerLink="/home">submit</ion-button>
+          <ion-button (click)="sent()">submit</ion-button>
           </ion-card-content>
     </ion-card>
   

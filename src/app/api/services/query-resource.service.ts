@@ -20,6 +20,7 @@ import { DefaultInfoRequest } from '../models/default-info-request';
 })
 class QueryResourceService extends __BaseService {
   static readonly searchByNearestLocationUsingGETPath = '/api/query/findByNearestLocation/{latLon}/{kiloMeter}';
+  static readonly getAllPendingBookingsUsingGETPath = '/api/query/getAllPendingBookings';
   static readonly getAllOpenBookingsUsingGETPath = '/api/query/myAppointments';
   static readonly getTasksUsingGETPath = '/api/query/tasks';
   static readonly getBookingDetailsUsingGETPath = '/api/query/vehicle-booking-details/{processInstanceId}';
@@ -90,6 +91,108 @@ class QueryResourceService extends __BaseService {
   searchByNearestLocationUsingGET(params: QueryResourceService.SearchByNearestLocationUsingGETParams): __Observable<PageOfDriver> {
     return this.searchByNearestLocationUsingGETResponse(params).pipe(
       __map(_r => _r.body as PageOfDriver)
+    );
+  }
+
+  /**
+   * @param params The `QueryResourceService.GetAllPendingBookingsUsingGETParams` containing the following parameters:
+   *
+   * - `processInstanceId`: processInstanceId
+   *
+   * - `processDefinitionKey`: Only return tasks which are part of a process instance which has a process definition with the given key.
+   *
+   * - `processDefinitionId`: Only return tasks which are part of a process instance which has a process definition with the given id.
+   *
+   * - `nameLike`: nameLike
+   *
+   * - `name`: name
+   *
+   * - `createdOn`: Only return tasks which are created on the given date.
+   *
+   * - `createdBefore`: Only return tasks which are created before the given date.
+   *
+   * - `createdAfter`: Only return tasks which are created after the given date.
+   *
+   * - `candidateUser`: candidateUser
+   *
+   * - `candidateGroups`: candidateGroups
+   *
+   * - `candidateGroup`: candidateGroup
+   *
+   * - `assigneeLike`: assigneeLike
+   *
+   * - `assignee`: assignee
+   *
+   * @return OK
+   */
+  getAllPendingBookingsUsingGETResponse(params: QueryResourceService.GetAllPendingBookingsUsingGETParams): __Observable<__StrictHttpResponse<Array<OpenBookings>>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.processInstanceId != null) __params = __params.set('processInstanceId', params.processInstanceId.toString());
+    if (params.processDefinitionKey != null) __params = __params.set('processDefinitionKey', params.processDefinitionKey.toString());
+    if (params.processDefinitionId != null) __params = __params.set('processDefinitionId', params.processDefinitionId.toString());
+    if (params.nameLike != null) __params = __params.set('nameLike', params.nameLike.toString());
+    if (params.name != null) __params = __params.set('name', params.name.toString());
+    if (params.createdOn != null) __params = __params.set('createdOn', params.createdOn.toString());
+    if (params.createdBefore != null) __params = __params.set('createdBefore', params.createdBefore.toString());
+    if (params.createdAfter != null) __params = __params.set('createdAfter', params.createdAfter.toString());
+    if (params.candidateUser != null) __params = __params.set('candidateUser', params.candidateUser.toString());
+    if (params.candidateGroups != null) __params = __params.set('candidateGroups', params.candidateGroups.toString());
+    if (params.candidateGroup != null) __params = __params.set('candidateGroup', params.candidateGroup.toString());
+    if (params.assigneeLike != null) __params = __params.set('assigneeLike', params.assigneeLike.toString());
+    if (params.assignee != null) __params = __params.set('assignee', params.assignee.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/query/getAllPendingBookings`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<OpenBookings>>;
+      })
+    );
+  }
+  /**
+   * @param params The `QueryResourceService.GetAllPendingBookingsUsingGETParams` containing the following parameters:
+   *
+   * - `processInstanceId`: processInstanceId
+   *
+   * - `processDefinitionKey`: Only return tasks which are part of a process instance which has a process definition with the given key.
+   *
+   * - `processDefinitionId`: Only return tasks which are part of a process instance which has a process definition with the given id.
+   *
+   * - `nameLike`: nameLike
+   *
+   * - `name`: name
+   *
+   * - `createdOn`: Only return tasks which are created on the given date.
+   *
+   * - `createdBefore`: Only return tasks which are created before the given date.
+   *
+   * - `createdAfter`: Only return tasks which are created after the given date.
+   *
+   * - `candidateUser`: candidateUser
+   *
+   * - `candidateGroups`: candidateGroups
+   *
+   * - `candidateGroup`: candidateGroup
+   *
+   * - `assigneeLike`: assigneeLike
+   *
+   * - `assignee`: assignee
+   *
+   * @return OK
+   */
+  getAllPendingBookingsUsingGET(params: QueryResourceService.GetAllPendingBookingsUsingGETParams): __Observable<Array<OpenBookings>> {
+    return this.getAllPendingBookingsUsingGETResponse(params).pipe(
+      __map(_r => _r.body as Array<OpenBookings>)
     );
   }
 
@@ -665,6 +768,77 @@ module QueryResourceService {
      * Page number of the requested page
      */
     page?: number;
+  }
+
+  /**
+   * Parameters for getAllPendingBookingsUsingGET
+   */
+  export interface GetAllPendingBookingsUsingGETParams {
+
+    /**
+     * processInstanceId
+     */
+    processInstanceId?: string;
+
+    /**
+     * Only return tasks which are part of a process instance which has a process definition with the given key.
+     */
+    processDefinitionKey?: string;
+
+    /**
+     * Only return tasks which are part of a process instance which has a process definition with the given id.
+     */
+    processDefinitionId?: string;
+
+    /**
+     * nameLike
+     */
+    nameLike?: string;
+
+    /**
+     * name
+     */
+    name?: string;
+
+    /**
+     * Only return tasks which are created on the given date.
+     */
+    createdOn?: string;
+
+    /**
+     * Only return tasks which are created before the given date.
+     */
+    createdBefore?: string;
+
+    /**
+     * Only return tasks which are created after the given date.
+     */
+    createdAfter?: string;
+
+    /**
+     * candidateUser
+     */
+    candidateUser?: string;
+
+    /**
+     * candidateGroups
+     */
+    candidateGroups?: string;
+
+    /**
+     * candidateGroup
+     */
+    candidateGroup?: string;
+
+    /**
+     * assigneeLike
+     */
+    assigneeLike?: string;
+
+    /**
+     * assignee
+     */
+    assignee?: string;
   }
 
   /**
