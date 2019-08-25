@@ -1,7 +1,7 @@
 import { CurrentUserService } from './../../services/current-user.service';
 import { ActivityService } from './../../services/activity.service';
 import { RouteLocations } from './../../dtos/route-locations';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { LocationService } from './../../services/location.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit, NgZone } from '@angular/core';
@@ -29,6 +29,7 @@ autocompleteItems = [];
   lat: number;
 
   constructor(private geoLocation: Geolocation,
+              private toastController: ToastController,
               private locationService: LocationService,
               private navController: NavController,
               private commandResource: CommandResourceService,
@@ -47,23 +48,49 @@ autocompleteItems = [];
 //// auto complete//////////
 
 updateSearchResults(searchBar: string) {
+
+  console.log('searching...');
   this.currentSearchBar = searchBar;
-  if (this.autocomplete.input == '') {
+  let data:string='';
+  if (this.currentSearchBar === 'from') {
+    data=this.routeLocation.fromAddress;
+    
+   
+  } else {
+    data=this.routeLocation.toAddress;
+    
+  }
+  if (data == '') {
     this.autocompleteItems = [];
     return;
-  }
-  this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+  }  
+  console.log('searching2...');
+  this.GoogleAutocomplete.getPlacePredictions({ input: data },
 	(predictions, status) => {
     this.autocompleteItems = [];
+    console.log('searching3...');
     this.zone.run(() => {
+      console.log('searching4...');
       predictions.forEach((prediction) => {
+        console.log('searching5...');
         this.autocompleteItems.push(prediction);
       });
     });
+    console.log('result...',this.autocompleteItems);
+  }, err => {
+    console.log('err...',err);
+    this.presentToast();
   });
 }
 
-
+async presentToast() {
+  const mes = 'api key expired';
+  const toast = await this.toastController.create({
+    message: mes,
+    duration: 2000
+  });
+  toast.present();
+}
 
 
 selectSearchResult(item: any) {
@@ -98,7 +125,7 @@ selectSearchResult(item: any) {
 
       console.log('sucess geting location ', result);
       if (result.status !== 'OVER_QUERY_LIMIT') {
-      this.routeLocation.fromAddress = result.results[0].formatted_address;
+      this.routeLocation.fromAddress = result[0].formatted_address;
       }
     }, err => {
       console.log('error while geting location', err);

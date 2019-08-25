@@ -19,6 +19,8 @@ import { AuthInterceptor } from './services/security/auth-interceptor';
 import { ConfigsModule } from './configs/configs.module';
 import { IonicStorageModule } from '@ionic/storage';
 import { UtilService } from './services/util.service';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,6 +44,8 @@ import { UtilService } from './services/util.service';
   providers: [
 
     Camera,
+    AndroidPermissions,
+    LocationAccuracy,
     GoogleMapsAPIWrapper,
     Geolocation,
     StatusBar,

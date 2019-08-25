@@ -19,7 +19,7 @@
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
-    <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyDTGidFqTY4Tv-EXCev5PTowNGrqj4v6Y4" />
+    <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyDE6vwyjr_HUlyzP6EU4rsNxd_xchtBA1o" />
     <preference name="GOOGLE_MAPS_IOS_API_KEY" value="AIzaSyDTGidFqTY4Tv-EXCev5PTowNGrqj4v6Y4" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">

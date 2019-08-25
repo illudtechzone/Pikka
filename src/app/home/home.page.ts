@@ -1,3 +1,5 @@
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationService } from './../services/location.service';
 import { NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
@@ -9,38 +11,31 @@ import { GoogleMap, Environment, GoogleMapOptions, GoogleMaps, Marker, GoogleMap
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit{
-  constructor(private geoLocation: Geolocation,
+  constructor(private geolocation: Geolocation,
               private navController: NavController,
-              private locationService: LocationService,) {}
+              private locationService: LocationService,
+              private androidPermissions:AndroidPermissions,
+              private locationAccuracy:LocationAccuracy) {
+                this.locationCoords = {
+                  latitude: "",
+                  longitude: "",
+                  accuracy: "",
+                  timestamp: ""
+                }
+                this.timetest = Date.now();
+              }
   status: Boolean = false;
 mapCanvas: GoogleMap;
-lat = 10.754090;
-lon = 76.547018;
 
-
-  
+locationCoords: any;
+  timetest: any;
 ngOnInit() {
 
   console.log('ion Init method');
-    this.currentLocation();
+    this.checkGPSPermission();
 
 
   }
-
-    currentLocation() {
-
-      this.geoLocation.getCurrentPosition().then((resp) => {
-
-        this.lat = resp.coords.latitude;
-        this.lon = resp.coords.longitude;
-      //  alert(resp.coords.latitude);
-        this.showMap();
-
-       }).catch((error) => {
-         console.log('Error getting location', error);
-       });
-      this.showMap();
-    }
 
     showMap() {
 
@@ -54,8 +49,8 @@ ngOnInit() {
       const mapOptions: GoogleMapOptions = {
           camera: {
             target: {
-              lat: this.lat,
-              lng: this.lon
+              lat: this.locationCoords.latitude,
+              lng: this.locationCoords.longitude ,
             },
             zoom: 14,
             tilt: 30
@@ -67,8 +62,8 @@ ngOnInit() {
       icon : 'red',
       animation: 'DROP',
       position: {
-        lat: this.lat,
-        lng: this.lon,
+        lat: this.locationCoords.latitude,
+        lng: this.locationCoords.longitude ,
 
       }
     });
@@ -79,5 +74,70 @@ ngOnInit() {
       search() {
         console.log('searching ');
         this.navController.navigateForward('/select-place');
+      }
+
+
+      ////////////////location access methods////////
+
+      checkGPSPermission() {
+        this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+          result => {
+            if (result.hasPermission) {
+     
+              //If having permission show 'Turn On GPS' dialogue
+              this.askToTurnOnGPS();
+            } else {
+     
+              //If not having permission ask for permission
+              this.requestGPSPermission();
+            }
+          },
+          err => {
+            alert(err);
+          }
+        );
+      }
+
+      requestGPSPermission() {
+        this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+          if (canRequest) {
+            console.log("4");
+          } else {
+            //Show 'GPS Permission Request' dialogue
+            this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+              .then(
+                () => {
+                  // call method to turn on GPS
+                  this.askToTurnOnGPS();
+                },
+                error => {
+                  //Show alert if user click on 'No Thanks'
+                  alert('requestPermission Error requesting location permissions ' + error)
+                }
+              );
+          }
+        });
+      }
+
+      askToTurnOnGPS() {
+        this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+          () => {
+            // When GPS Turned ON call method to get Accurate location coordinates
+            this.getLocationCoordinates();
+          },
+          error => alert('Error requesting location permissions ' + JSON.stringify(error))
+        );
+      }
+
+      getLocationCoordinates() {
+        this.geolocation.getCurrentPosition().then((resp) => {
+          this.locationCoords.latitude = resp.coords.latitude;
+          this.locationCoords.longitude = resp.coords.longitude;
+          this.locationCoords.accuracy = resp.coords.accuracy;
+          this.locationCoords.timestamp = resp.timestamp;
+          this.showMap();
+        }).catch((error) => {
+          alert('Error getting location' + error);
+        });
       }
 }
