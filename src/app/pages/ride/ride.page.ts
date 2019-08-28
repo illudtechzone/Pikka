@@ -31,10 +31,10 @@ export class RidePage implements OnInit {
               private commandResourceService: CommandResourceService,
               private activityService: ActivityService,
               private util: UtilService,
-              private toastController:ToastController,
-              private currentUserService:CurrentUserService) {}
+              private toastController: ToastController,
+              private currentUserService: CurrentUserService) {}
   ngOnInit() {
-    this.activityService.getProcessInstanceId();
+   this.processInstanceId = this.activityService.getProcessInstanceId();
   }
 
 
@@ -49,28 +49,28 @@ export class RidePage implements OnInit {
     this.isVehicleList = !this.isVehicleList;
   }
   requestVehicle(vehicle) {
-    let rideDTo: RideDTO={};
-    rideDTo.driverId=vehicle.iDPcode;
+    this.util.createLoader()
+      .then(loader => {
+        loader.present();
+        const rideDTo: RideDTO = {};
+        rideDTo.driverId = vehicle.iDPcode;
+        rideDTo.addressDestination = this.currentUserService.getRoute().fromAddress;
+        rideDTo.addressStartingPoint = this.currentUserService.getRoute().toAddress;
+        rideDTo.totalDistance = 10;
+        this.commandResourceService.sendRequestToDriverUsingPOST({rideDto: rideDTo, processInstanceId: this.processInstanceId}).subscribe(
+      data => {
+        console.log('Send Request Status ', data);
+        loader.dismiss();
+      },
+      err => {
+        console.log('err sending  Request  ', err);
 
-    rideDTo.addressDestination=this.currentUserService.getRoute().fromAddress;
-    
-    rideDTo.addressStartingPoint= this.currentUserService.getRoute().toAddress;
-    rideDTo.totalDistance=10;
-    this.commandResourceService.sendRequestToDriverUsingPOST(rideDTo).subscribe(
-      data=>{
-        console.log("Send Request Status "+data);
+        loader.dismiss();
       }
     );
-   
-  }
+      });
 
-// chooseDriver(taskId:string){
-//   this.isRequest = !this.isRequest;
-//   this.commandResourceService.chooseDriverUsingPOST({taskId:taskId,driverInfo:{}}).subscribe((result:any)=>{
-//     this.isRequest = !this.isRequest;
-//   });
-// }
- // map code start
+  }
 
   ionViewWillEnter() {
     console.log('ion view will enter method');
@@ -116,12 +116,12 @@ export class RidePage implements OnInit {
       .then(loader => {
         loader.present();
         const latlon = this.lat + ',' + this.lon;
-        this.quryResource.searchByNearestLocationUsingGET({latLon: latlon, kiloMeter:30, size:5}).subscribe(
+        this.quryResource.searchByNearestLocationUsingGET({latLon: latlon, kiloMeter: 30, size: 5}).subscribe(
       (result: any) => {
         console.log('GOT NEAREST DRIVERS ', result);
         this.vehiclesList = result.content;
         loader.dismiss();
-        if(result.content.length===0){
+        if (result.content.length === 0) {
           this.presentToast('no vehicles found');
         }
       },

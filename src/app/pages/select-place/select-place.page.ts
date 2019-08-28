@@ -16,18 +16,18 @@ declare var google: any;
 })
 export class SelectPlacePage implements OnInit {
   GoogleAutocomplete: any;
-autocomplete: any;
-autocompleteItems = [];
- fromPlaceId = '';
- boo = true;
+  autocomplete: any;
+  autocompleteItems = [];
+  fromPlaceId = '';
+  boo = true;
   taskid = '';
- toPlaceId = '';
- currentSearchBar = '';
- routeLocation: RouteLocations = new RouteLocations;
- predictions: any = [{description: 'no match'}];
+  toPlaceId = '';
+  currentSearchBar = '';
+  routeLocation: RouteLocations = new RouteLocations;
+  predictions: any = [{ description: 'no match' }];
   lon: number;
   lat: number;
-
+  private loader: any;
   constructor(private geoLocation: Geolocation,
               private toastController: ToastController,
               private locationService: LocationService,
@@ -39,81 +39,70 @@ autocompleteItems = [];
               private currentUserService: CurrentUserService,
               private zone: NgZone) {
 
-                this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-                this.autocomplete = { input: '' };
-                this.autocompleteItems = [];
+    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+    this.autocomplete = { input: '' };
+    this.autocompleteItems = [];
 
-              }
-
-//// auto complete//////////
-
-updateSearchResults(searchBar: string) {
-
-  console.log('searching...');
-  this.currentSearchBar = searchBar;
-  let data:string='';
-  if (this.currentSearchBar === 'from') {
-    data=this.routeLocation.fromAddress;
-    
-   
-  } else {
-    data=this.routeLocation.toAddress;
-    
   }
-  if (data == '') {
-    this.autocompleteItems = [];
-    return;
-  }  
-  console.log('searching2...');
-  this.GoogleAutocomplete.getPlacePredictions({ input: data },
-	(predictions, status) => {
-    this.autocompleteItems = [];
-    console.log('searching3...');
-    this.zone.run(() => {
-      console.log('searching4...');
-      predictions.forEach((prediction) => {
-        console.log('searching5...');
-        this.autocompleteItems.push(prediction);
-      });
+
+  //// auto complete//////////
+
+  updateSearchResults(searchBar: string) {
+
+    console.log('searching...');
+    this.currentSearchBar = searchBar;
+    let data = '';
+    if (this.currentSearchBar === 'from') {
+      data = this.routeLocation.fromAddress;
+
+
+    } else {
+      data = this.routeLocation.toAddress;
+
+    }
+    if (data == '') {
+      this.autocompleteItems = [];
+      return;
+    }
+    this.locationService.getAdressPredictions(data).then((resp: any[]) => {
+      this.autocompleteItems = resp;
+    }, err => {
+      console.log('prediction.err...g', err);
+
     });
-    console.log('result...',this.autocompleteItems);
-  }, err => {
-    console.log('err...',err);
-    this.presentToast();
-  });
-}
-
-async presentToast() {
-  const mes = 'api key expired';
-  const toast = await this.toastController.create({
-    message: mes,
-    duration: 2000
-  });
-  toast.present();
-}
-
-
-selectSearchResult(item: any) {
-
-  console.log('selected item is ', item.description);
-
-  if (this.currentSearchBar === 'from') {
-    this.routeLocation.fromAddress = item.description;
-    this.fromPlaceId = item.place_id;
-  } else {
-    this.routeLocation.toAddress = item.description;
-    this.toPlaceId = item.place_id;
   }
-  console.log('current route is ', this.routeLocation);
 
-}
+  async presentToast() {
+    const mes = 'api key expired';
+    const toast = await this.toastController.create({
+      message: mes,
+      duration: 2000
+    });
+    toast.present();
+  }
 
 
-/////////////////////////////////
+  selectSearchResult(item: any) {
+
+    console.log('selected item is ', item.description);
+
+    if (this.currentSearchBar === 'from') {
+      this.routeLocation.fromAddress = item.description;
+      this.fromPlaceId = item.place_id;
+    } else {
+      this.routeLocation.toAddress = item.description;
+      this.toPlaceId = item.place_id;
+    }
+    console.log('current route is ', this.routeLocation);
+
+  }
+
+
+  /////////////////////////////////
 
 
   ngOnInit() {
-   this.currentLocation();
+    this.currentLocation();
   }
 
   currentLocation() {
@@ -123,82 +112,82 @@ selectSearchResult(item: any) {
       this.lon = resp.coords.longitude;
       this.locationService.getAddressFromLatLon(this.lat, this.lon).then((result: any) => {
 
-      console.log('sucess geting location ', result);
-      if (result.status !== 'OVER_QUERY_LIMIT') {
-      this.routeLocation.fromAddress = result[0].formatted_address;
-      }
-    }, err => {
-      console.log('error while geting location', err);
+        console.log('sucess geting location ', result);
+        if (result.status !== 'OVER_QUERY_LIMIT') {
+          this.routeLocation.fromAddress = result[0].formatted_address;
+          this.fromPlaceId = result[0].place_id;
+            }
+      }, err => {
+        console.log('error while geting location', err);
 
+      });
+
+    }).catch((error) => {
+      console.log('Error getting location', error);
     });
-
-     }).catch((error) => {
-       console.log('Error getting location', error);
-     });
   }
 
 
-go() {
-  this.util.createLoader()
-  .then(loader => {
-  console.log('intiating workflow');
-  // tslint:disable-next-line: max-line-length
-  this.commandResource.initateWorkflowUsingPOST().subscribe(
-    result => {
-      console.log('sucessfuly started workflow with proces instance id', result);
-      this.activityService.setProcessInstanceId(result);
-      this.getTask(result);
-      loader.dismiss();
-    },
-    err => {
-      console.log('error starting workflow ', err);
-      loader.dismiss();
-    }
-  );
-  });
+  go() {
+    this.util.createLoader()
+      .then(loader => {
+        this.loader = loader;
+        this.loader.present();
+        console.log('intiating workflow');
+        // tslint:disable-next-line: max-line-length
+        this.commandResource.initateWorkflowUsingPOST().subscribe(
+          result => {
+            console.log('sucessfuly started workflow with proces instance id', result);
+            this.activityService.setProcessInstanceId(result);
+            this.getTask(result);
+
+          },
+          err => {
+            console.log('error starting workflow ', err);
+            this.loader.dismiss();
+          }
+        );
+      });
 
 
 
-}
+  }
 
-getTask(processInstanceId: string) {
-  this.util.createLoader()
-  .then(loader => {
-  this.queryResource.getTasksUsingGET({processInstanceId}).subscribe(
-    (result: any) => {
-        console.log('sucess geting task', result);
-        console.log('task id ', result.data[0].id);
-        this.collectLocation(result.data[0].id);
-        loader.dismiss();
-    }, err => {
-        console.log('error geting task', err);
-        loader.dismiss();
-    }
-  );
-  });
-}
+  getTask(processInstanceId: string) {
+   
+        this.queryResource.getTasksUsingGET({ processInstanceId }).subscribe(
+          (result: any) => {
+            console.log('sucess geting task', result);
+            console.log('task id ', result.data[0].id);
+            this.collectLocation(result.data[0].id);
+          }, err => {
+            console.log('error geting task', err);
+            this.loader.dismiss();
+          }
+        );
+  }
 
   collectLocation(taskId: string) {
-    this.util.createLoader()
-    .then(loader => {
-      loader.present();
-      console.log('route location', this.routeLocation);
-      this.currentUserService.setRoute(this.routeLocation);
-      this.commandResource.collectRiderLocationDetailsUsingPOST({taskId, defaultInfoRequest: {destination: this.routeLocation.toAddress,
-    pickUp: this.routeLocation.fromAddress}}).subscribe(
-      (result: any) => {
-        console.log('sucess giving location info', result);
-        this.navController.navigateForward('/ride');
-        loader.dismiss();
+   
+        console.log('route location', this.routeLocation);
+        this.currentUserService.setRoute(this.routeLocation);
+        this.commandResource.collectRiderLocationDetailsUsingPOST({
+          taskId, defaultInfoRequest: {
+            destination: this.routeLocation.toAddress,
+            pickUp: this.routeLocation.fromAddress
+          }
+        }).subscribe(
+          (result: any) => {
+            console.log('sucess giving location info', result);
+            this.loader.dismiss();
+            this.navController.navigateForward('/ride');
+          },
+          err => {
+            console.log('error giving location info', err);
+            this.loader.dismiss();
 
-      },
-      err => {
-        console.log('error giving location info', err);
-        loader.dismiss();
-
-      }
-    );
-    });
+          }
+        );
   }
 
   geoCodeAdress() {
@@ -209,14 +198,14 @@ getTask(processInstanceId: string) {
           result3 => {
             console.log('#got log lat from place id', result3);
 
-           }, err => {
+          }, err => {
             console.log('#error geting log lat from place id', err);
 
-           });
-       }, err => {
+          });
+      }, err => {
         console.log('#error geting log lat from place id', err);
 
-       });
+      });
   }
 
 }
