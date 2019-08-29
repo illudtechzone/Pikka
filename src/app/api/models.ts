@@ -8,6 +8,7 @@ export { PageOfDriver } from './models/page-of-driver';
 export { PaymentStatus } from './models/payment-status';
 export { RateAndReview } from './models/rate-and-review';
 export { RideDTO } from './models/ride-dto';
+export { RideDtoWrapper } from './models/ride-dto-wrapper';
 export { RideStatus } from './models/ride-status';
 export { RiderDTO } from './models/rider-dto';
 export { RouteVM } from './models/route-vm';

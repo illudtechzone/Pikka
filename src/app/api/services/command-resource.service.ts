@@ -13,6 +13,7 @@ import { RiderDTO } from '../models/rider-dto';
 import { DriverInfo } from '../models/driver-info';
 import { PaymentStatus } from '../models/payment-status';
 import { RateAndReview } from '../models/rate-and-review';
+import { RideDtoWrapper } from '../models/ride-dto-wrapper';
 import { RideDTO } from '../models/ride-dto';
 import { RideStatus } from '../models/ride-status';
 
@@ -365,7 +366,7 @@ class CommandResourceService extends __BaseService {
    *
    * @return OK
    */
-  sendRequestToDriverUsingPOSTResponse(params: CommandResourceService.SendRequestToDriverUsingPOSTParams): __Observable<__StrictHttpResponse<string>> {
+  sendRequestToDriverUsingPOSTResponse(params: CommandResourceService.SendRequestToDriverUsingPOSTParams): __Observable<__StrictHttpResponse<RideDtoWrapper>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -378,13 +379,13 @@ class CommandResourceService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'text'
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<string>;
+        return _r as __StrictHttpResponse<RideDtoWrapper>;
       })
     );
   }
@@ -397,9 +398,9 @@ class CommandResourceService extends __BaseService {
    *
    * @return OK
    */
-  sendRequestToDriverUsingPOST(params: CommandResourceService.SendRequestToDriverUsingPOSTParams): __Observable<string> {
+  sendRequestToDriverUsingPOST(params: CommandResourceService.SendRequestToDriverUsingPOSTParams): __Observable<RideDtoWrapper> {
     return this.sendRequestToDriverUsingPOSTResponse(params).pipe(
-      __map(_r => _r.body as string)
+      __map(_r => _r.body as RideDtoWrapper)
     );
   }
 

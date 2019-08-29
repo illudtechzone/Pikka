@@ -29,6 +29,7 @@ export class SignUpPage implements OnInit {
 
   }
   signup() {
+    if(this.validatePhone() && this.validateEmail()){
     this.util.createLoader()
       .then(loader => {
         loader.present();
@@ -49,6 +50,7 @@ export class SignUpPage implements OnInit {
           });
           // Remove this later
         });
+      }
   }
 
 
@@ -72,6 +74,24 @@ export class SignUpPage implements OnInit {
       });
   }
 
+  validateEmail() {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!re.test(String(this.email).toLowerCase())) {
+      this.util.createToast('Invalid email ');
+      return false;
+    }
+    return true;
+  }
+
+  validatePhone() {
+    const re = /^[0][1-9]\d{9}$|^[1-9]\d{9}$/;
+    if (!re.test(String(this.phone).toLowerCase())) {
+      this.util.createToast('Invalid Phone number ');
+      return false;
+    }
+    return true;
+  }
 }
 
 
