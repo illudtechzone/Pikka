@@ -168,7 +168,6 @@ export class SelectPlacePage implements OnInit {
   }
 
   collectLocation(taskId: string) {
-   
         console.log('route location', this.routeLocation);
         this.currentUserService.setRoute(this.routeLocation);
         this.commandResource.collectRiderLocationDetailsUsingPOST({

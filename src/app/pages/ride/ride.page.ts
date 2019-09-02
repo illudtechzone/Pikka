@@ -54,8 +54,8 @@ export class RidePage implements OnInit {
         loader.present();
         const rideDTo: RideDTO = {};
         rideDTo.driverId = vehicle.iDPcode;
-        rideDTo.addressDestination = this.currentUserService.getRoute().fromAddress;
-        rideDTo.addressStartingPoint = this.currentUserService.getRoute().toAddress;
+        rideDTo.addressDestination = this.currentUserService.getRoute().toAddress;
+        rideDTo.addressStartingPoint = this.currentUserService.getRoute().fromAddress;
         rideDTo.totalDistance = 10;
         this.commandResourceService.sendRequestToDriverUsingPOST({rideDto: rideDTo, processInstanceId: this.processInstanceId}).subscribe(
       data => {
