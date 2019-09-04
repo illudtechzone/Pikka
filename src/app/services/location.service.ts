@@ -1,8 +1,11 @@
+import { CurrentUserService } from './current-user.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit, NgZone } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { MapsAPILoader, GoogleMapsAPIWrapper } from '@agm/core';
 import { Observable } from 'rxjs';
+
+import * as decodePolyline from 'decode-google-map-polyline';
 
 declare var google: any;
 
@@ -26,7 +29,8 @@ export class LocationService {
               private ngZone: NgZone,
               private mapsWrapper: GoogleMapsAPIWrapper,
               private geolocation: Geolocation,
-              private zone: NgZone) {
+              private zone: NgZone,
+              private currentUserService:CurrentUserService) {
 
                 console.log('Constror service location');
                 this.mapsAPILoader.load().then(() => {
@@ -112,6 +116,33 @@ export class LocationService {
     });
   }
 
+
+  getDiractions(): Promise<any> {
+
+    const directionsService = new google.maps.DirectionsService();
+    let directionsRenderer = new google.maps.DirectionsRenderer();
+    return new Promise((resolve) => {
+
+directionsService.route(
+  {
+    origin: this.currentUserService.getRoute().fromAddress,
+    destination: this.currentUserService.getRoute().toAddress,
+    travelMode: 'DRIVING'
+  },
+  function(response, status) {
+    if (status === 'OK') {
+      directionsRenderer.setDirections(response);
+      console.log('got the way ', response.routes[0]);
+      console.log('decoded result ', decodePolyline(response.routes[0].overview_polyline));
+      resolve(decodePolyline(response.routes[0].overview_polyline));
+   }
+    // else {
+    //   window.alert('Directions request failed due to ' + status);
+
+    // }
+  });
+});
+}
 
 
 }

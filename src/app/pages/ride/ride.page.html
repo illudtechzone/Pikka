@@ -11,11 +11,11 @@
   <div id="map_canvas"></div>
 </ion-content>
 <ion-footer>
-  <ion-toolbar (click)="changeFooter()" color="primary">
+  <ion-toolbar *ngIf="!(isAccepted)"  (click)="changeFooter()" color="primary">
     <h4 text-center>Available Auto</h4>
   </ion-toolbar>
 
-  <div *ngIf="isVehicleList">
+  <div *ngIf="isVehicleList && !(isAccepted)">
     <ion-item class="card2" *ngFor="let vehicle of vehiclesList" >
       <ion-card-subtitle>
       {{vehicle.iDPcode}}
@@ -41,6 +41,13 @@
     <ion-button slot="end" expand="round" color="danger">
         <ion-icon name="close"></ion-icon>
     </ion-button>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item *ngIf="isAccepted" >
+      <ion-text slot=start>manu Accepted </ion-text>
+      <ion-text slot=end (click)="presentModal()"> more info</ion-text>
+
     </ion-item>
   </div>
 </ion-footer>
