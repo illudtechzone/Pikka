@@ -1,3 +1,4 @@
+import { InvoiceComponent } from './../../components/invoice/invoice.component';
 import { DriverDetialsComponent } from 'src/app/components/driver-detials/driver-detials.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,6 +27,6 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [RidePage],
-  entryComponents: [VehiclesListComponent,DriverDetialsComponent]
+  entryComponents: [VehiclesListComponent,DriverDetialsComponent,InvoiceComponent]
 })
 export class RidePageModule {}

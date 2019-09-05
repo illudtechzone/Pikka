@@ -22,7 +22,14 @@ export class LocationService {
   private currentLat: number;
   private currentLon: number;
   private geocoder: any;
+private distance: '';
 
+getDistance(): string {
+
+  console.log('geting distance ',this.distance);
+  return this.distance;
+
+}
 
   constructor(private http: HttpClient,
               private mapsAPILoader: MapsAPILoader,
@@ -30,7 +37,7 @@ export class LocationService {
               private mapsWrapper: GoogleMapsAPIWrapper,
               private geolocation: Geolocation,
               private zone: NgZone,
-              private currentUserService:CurrentUserService) {
+              private currentUserService: CurrentUserService) {
 
                 console.log('Constror service location');
                 this.mapsAPILoader.load().then(() => {
@@ -120,7 +127,7 @@ export class LocationService {
   getDiractions(): Promise<any> {
 
     const directionsService = new google.maps.DirectionsService();
-    let directionsRenderer = new google.maps.DirectionsRenderer();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
     return new Promise((resolve) => {
 
 directionsService.route(
@@ -134,7 +141,11 @@ directionsService.route(
       directionsRenderer.setDirections(response);
       console.log('got the way ', response.routes[0]);
       console.log('decoded result ', decodePolyline(response.routes[0].overview_polyline));
-      resolve(decodePolyline(response.routes[0].overview_polyline));
+      this.distance = response.routes[0].legs[0].distance.text;
+      console.log('distance ',response.routes[0].legs[0].distance.text);
+      // this.getDistance();
+
+      resolve({points:decodePolyline(response.routes[0].overview_polyline),distance:response.routes[0].legs[0].distance.text});
    }
     // else {
     //   window.alert('Directions request failed due to ' + status);
@@ -142,7 +153,7 @@ directionsService.route(
     // }
   });
 });
-}
 
+}
 
 }

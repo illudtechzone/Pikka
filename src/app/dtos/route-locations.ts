@@ -2,5 +2,6 @@ export class RouteLocations {
     from:Location;
     to:Location;
     fromAddress:string;
-    toAddress:string;
+    toAddress:string='';
+    distance:string='';
 }
