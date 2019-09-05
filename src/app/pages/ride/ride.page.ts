@@ -10,6 +10,7 @@ import { DriverDetialsComponent } from 'src/app/components/driver-detials/driver
 import { GoogleMap, Environment, GoogleMapOptions, GoogleMaps, Marker, GoogleMapsEvent, MarkerOptions, GoogleMapsAnimation } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { UtilService } from 'src/app/services/util.service';
+import { InvoiceComponent } from 'src/app/components/invoice/invoice.component';
 
 @Component({
   selector: 'app-ride',
@@ -43,7 +44,10 @@ export class RidePage implements OnInit {
    this.processInstanceId = this.activityService.getProcessInstanceId();
    this.locationService.getDiractions().then(
     (data: any) => {
-      this.routePoints = data;
+      this.routePoints = data.points;
+      this.currentUserService.getRoute().distance=data.distance;
+      console.log('>>>got diggstance and points >>>>', data.distance);
+
       console.log('>>>got route points >>>>', data);
       console.log('>>>got route points >>>>', this.routePoints);
       this.showMap();
@@ -70,8 +74,19 @@ export class RidePage implements OnInit {
 
   }
 
+  async showInvoice() {
+    console.log('koiii');
+    const modal = await this.modalController.create({
+      component: InvoiceComponent,
+    });
+    return await modal.present();
+  }
+
 
   requestVehicle(vehicle) {
+
+    this.showInvoice();
+    
     this.util.createLoader()
       .then(loader => {
         loader.present();

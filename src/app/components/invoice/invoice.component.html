@@ -1,0 +1,30 @@
+
+<ion-card (click)="dismiss()">
+  <ion-card-header>
+    <ion-card-title text-center>
+      charge
+    </ion-card-title>
+    <ion-card-content>
+        
+          <ion-item lines="none">
+            <ion-text slot="start">From     :</ion-text>
+            <ion-text slot="end"> {{invoice.pickupAddress}}</ion-text>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-text slot="start">To       :</ion-text>
+            <ion-text slot="end">{{invoice.destAddress}}</ion-text>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-text slot="start">Distance :</ion-text>
+            <ion-text slot="end">{{invoice.distance}}</ion-text>
+          </ion-item>
+          <ion-item lines="full">
+
+                <ion-text slot="start">Totel cost : </ion-text>
+            <ion-text slot="end">{{invoice.totel}} rs</ion-text>
+          </ion-item>
+          <div>
+          </div>
+    </ion-card-content>
+  </ion-card-header>
+</ion-card>

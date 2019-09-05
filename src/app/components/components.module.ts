@@ -1,3 +1,4 @@
+import { InvoiceComponent } from './invoice/invoice.component';
 import { DriverDetialsComponent } from './driver-detials/driver-detials.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,11 +11,11 @@ import { RatingComponent } from './rating/rating.component';
 
 
 @NgModule({
-  declarations: [VehiclesListComponent,RatingComponent,DriverDetialsComponent],
+  declarations: [VehiclesListComponent,RatingComponent,DriverDetialsComponent,InvoiceComponent],
   imports: [
     CommonModule,
     IonicModule.forRoot(),
   ],
-  exports:[VehiclesListComponent,RatingComponent,DriverDetialsComponent]
+  exports:[VehiclesListComponent,RatingComponent,DriverDetialsComponent,InvoiceComponent]
 })
 export class ComponentsModule { }
