@@ -23,24 +23,11 @@
       <ion-button
       *ngIf="!isRequest"
       slot="end"
-      (click)="requestVehicle(vehicle)"
+      (click)="showInvoice(vehicle)"
       expand="round"
-      color="success"
-      >
+      color="success">
       <ion-icon name="call"></ion-icon>
-      </ion-button
-    >
-    <ion-button
-      *ngIf="isRequest"
-      slot="end"
-      (click)="requestVehicle()"
-      expand="round"
-      >    <ion-icon name="timer"></ion-icon>
-      </ion-button
-    >
-    <ion-button slot="end" expand="round" color="danger">
-        <ion-icon name="close"></ion-icon>
-    </ion-button>
+      </ion-button>
     </ion-item>
   </div>
   <div>

@@ -75,19 +75,22 @@ export class RidePage implements OnInit {
 
   }
 
-  async showInvoice() {
+  async showInvoice(vehicle) {
     console.log('koiii');
     const modal = await this.modalController.create({
       component: InvoiceComponent,
     });
-    return await modal.present();
+    await modal.present();
+     const { data } = await modal.onWillDismiss();
+     if(data.response==='confirm'){
+      this.requestVehicle(vehicle);
+     }
+    console.log(data);
+
   }
 
 
   requestVehicle(vehicle) {
-
-    this.showInvoice();
-    
     this.util.createLoader()
       .then(loader => {
         loader.present();
