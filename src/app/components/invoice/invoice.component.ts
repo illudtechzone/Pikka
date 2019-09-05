@@ -27,11 +27,17 @@ export class InvoiceComponent implements OnInit {
     console.log('3>>',this.invoice.distance);
     this.invoice.totel = parseFloat((this.invoice.distance.split(' ')[0])) * 2+'';
   }
-  dismiss() {
+
+
+  dismiss(response:string) {
     // using the injected ModalController this page
     // can "dismiss" itself and optionally pass back data
     this.modalCtrl.dismiss({
-      dismissed: true
+      dismissed: true,
+      response: response
     });
   }
+
+
+
 }

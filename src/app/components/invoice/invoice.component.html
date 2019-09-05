@@ -24,6 +24,14 @@
             <ion-text slot="end">{{invoice.totel}} rs</ion-text>
           </ion-item>
           <div>
+              <ion-row>
+                  <ion-col>
+                    <ion-button (click)="dismiss('confirm')"  color="primary" expand="block">confirm</ion-button>
+                  </ion-col>
+                  <ion-col>
+                    <ion-button (click)="dismiss('cancel')" color="danger" expand="block">Cancel</ion-button>
+                  </ion-col>
+                </ion-row>
           </div>
     </ion-card-content>
   </ion-card-header>
