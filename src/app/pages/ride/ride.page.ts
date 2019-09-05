@@ -53,6 +53,7 @@ export class RidePage implements OnInit {
       this.showMap();
     }
     );
+
   }
 
 
@@ -110,14 +111,38 @@ export class RidePage implements OnInit {
 
   }
 
+  // ionViewDidEnter() {
+  //   console.log('ion view will enter method');
+
+
+  //   this.isAccepted=this.notificationService.getStatus();
+  //   this.processInstanceId = this.activityService.getProcessInstanceId();
   ionViewWillEnter() {
-    console.log('ion view will enter method');
-    this.getCordinates();
-    this.getVehicles();
     this.isAccepted=this.notificationService.getStatus();
+    this.processInstanceId = this.activityService.getProcessInstanceId();
+
+    this.locationService.getDiractions().then(
+      (data: any) => {
+        this.routePoints = data;
+        console.log('>>>got route points >>>>', data);
+        console.log('>>>got route points >>>>', this.routePoints);
+        this.currentLocation();
+      }
+      );
 
     }
-    showMap() {
+    currentLocation() {
+      this.geoLocation.getCurrentPosition().then(resp => {
+        this.lat = resp.coords.latitude;
+        this.lon = resp.coords.longitude;
+        this.showMap();
+
+       }, error => {
+         console.log('Error getting location', error);
+       });
+    }
+
+showMap() {
       console.log('loadMap');
 
       console.log('route points', this.routePoints);
@@ -160,7 +185,7 @@ export class RidePage implements OnInit {
             });
           });
         });
-
+this.getVehicles();
       }
 
   getVehicles() {
@@ -185,18 +210,7 @@ export class RidePage implements OnInit {
     );
       });
   }
-  getCordinates() {
-    this.geoLocation.getCurrentPosition().then((resp) => {
 
-      this.lat = resp.coords.latitude;
-      this.lon = resp.coords.longitude;
-
-  }).catch((err) => {
-    console.log('Error getting location', err);
-  }
-
-  );
-}
 
 async presentToast(message: string) {
   const toast = await this.toastController.create({

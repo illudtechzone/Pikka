@@ -1,7 +1,7 @@
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationService } from './../services/location.service';
-import { NavController } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GoogleMap, Environment, GoogleMapOptions, GoogleMaps, Marker, GoogleMapsEvent} from '@ionic-native/google-maps';
@@ -15,7 +15,8 @@ export class HomePage implements OnInit{
               private navController: NavController,
               private locationService: LocationService,
               private androidPermissions:AndroidPermissions,
-              private locationAccuracy:LocationAccuracy) {
+              private locationAccuracy:LocationAccuracy,
+              private platform: Platform) {
                 this.locationCoords = {
                   latitude: "",
                   longitude: "",
@@ -32,8 +33,12 @@ locationCoords: any;
 ngOnInit() {
 
   console.log('ion Init method');
+ 
+  if (this.platform.is('android')) {
     this.checkGPSPermission();
-
+  } else {
+    this.getLocationCoordinates();
+  }
 
   }
 

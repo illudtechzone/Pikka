@@ -10,7 +10,7 @@
 <ion-content>
   <div id="map_canvas"></div>
 </ion-content>
-<ion-footer>
+ <ion-footer>
   <ion-toolbar *ngIf="!(isAccepted)"  (click)="changeFooter()" color="primary">
     <h4 text-center>Available Auto</h4>
   </ion-toolbar>
@@ -24,7 +24,7 @@
       *ngIf="!isRequest"
       slot="end"
       (click)="requestVehicle(vehicle)"
-      expand="round" 
+      expand="round"
       color="success"
       >
       <ion-icon name="call"></ion-icon>
