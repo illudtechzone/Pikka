@@ -4,7 +4,6 @@ export interface DriverDTO {
   drivingLicenseNumber?: string;
   iDPcode?: string;
   id?: number;
-  idpcode?: string;
   image?: string;
   firstName?: string;
   lastName?: string;

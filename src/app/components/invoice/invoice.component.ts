@@ -29,12 +29,14 @@ export class InvoiceComponent implements OnInit {
   }
 
 
-  dismiss(response:string) {
+  dismiss(response) {
     // using the injected ModalController this page
     // can "dismiss" itself and optionally pass back data
     this.modalCtrl.dismiss({
       dismissed: true,
-      response: response
+      response: response,
+      distance: parseFloat((this.invoice.distance.split(' ')[0])),
+      fare: this.invoice.totel
     });
   }
 

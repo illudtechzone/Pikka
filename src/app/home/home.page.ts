@@ -1,10 +1,14 @@
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationService } from './../services/location.service';
-import { NavController, Platform } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GoogleMap, Environment, GoogleMapOptions, GoogleMaps, Marker, GoogleMapsEvent} from '@ionic-native/google-maps';
+import { AccountResourceService } from '../api/services';
+import { JhiWebSocketService } from '../services/jhi-web-socket.service';
+import { CurrentUserService } from '../services/current-user.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -16,7 +20,10 @@ export class HomePage implements OnInit{
               private locationService: LocationService,
               private androidPermissions:AndroidPermissions,
               private locationAccuracy:LocationAccuracy,
-              private platform: Platform) {
+              private platform:Platform,
+              private accountResource: AccountResourceService,
+              private jhiNotification: JhiWebSocketService,
+              private currentUserService: CurrentUserService) {
                 this.locationCoords = {
                   latitude: "",
                   longitude: "",
@@ -33,7 +40,15 @@ locationCoords: any;
 ngOnInit() {
 
   console.log('ion Init method');
- 
+  this.accountResource.getAccountUsingGET().subscribe(data => {
+    console.log('Login :'+data.login);
+    this.currentUserService.setUser(data);
+    this.jhiNotification.connect(data.login);
+
+
+
+  });
+
   if (this.platform.is('android')) {
     this.checkGPSPermission();
   } else {
@@ -88,11 +103,11 @@ ngOnInit() {
         this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
           result => {
             if (result.hasPermission) {
-     
+
               //If having permission show 'Turn On GPS' dialogue
               this.askToTurnOnGPS();
             } else {
-     
+
               //If not having permission ask for permission
               this.requestGPSPermission();
             }

@@ -32,6 +32,7 @@ class CommandResourceService extends __BaseService {
   static readonly initateWorkflowUsingPOSTPath = '/api/command/initiate';
   static readonly paymentUsingPOSTPath = '/api/command/payment/{taskId}';
   static readonly rateAndReviewUsingPOSTPath = '/api/command/rateAndReview/{taskId}';
+  static readonly sendStatusToCustomerUsingPOSTPath = '/api/command/request/customer/{status}';
   static readonly sendRequestToDriverUsingPOSTPath = '/api/command/request/driver/{processInstanceId}';
   static readonly rideCompleteUsingPOSTPath = '/api/command/rideComplete/{taskId}';
   static readonly startRideUsingPOSTPath = '/api/command/startRide/{taskId}';
@@ -358,6 +359,53 @@ class CommandResourceService extends __BaseService {
   }
 
   /**
+   * @param params The `CommandResourceService.SendStatusToCustomerUsingPOSTParams` containing the following parameters:
+   *
+   * - `rideDto`: rideDto
+   *
+   * - `status`: status
+   *
+   * @return OK
+   */
+  sendStatusToCustomerUsingPOSTResponse(params: CommandResourceService.SendStatusToCustomerUsingPOSTParams): __Observable<__StrictHttpResponse<RideDtoWrapper>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = params.rideDto;
+    if (params.status != null) __params = __params.set('status', params.status.toString());
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/command/request/customer/${params.status}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<RideDtoWrapper>;
+      })
+    );
+  }
+  /**
+   * @param params The `CommandResourceService.SendStatusToCustomerUsingPOSTParams` containing the following parameters:
+   *
+   * - `rideDto`: rideDto
+   *
+   * - `status`: status
+   *
+   * @return OK
+   */
+  sendStatusToCustomerUsingPOST(params: CommandResourceService.SendStatusToCustomerUsingPOSTParams): __Observable<RideDtoWrapper> {
+    return this.sendStatusToCustomerUsingPOSTResponse(params).pipe(
+      __map(_r => _r.body as RideDtoWrapper)
+    );
+  }
+
+  /**
    * @param params The `CommandResourceService.SendRequestToDriverUsingPOSTParams` containing the following parameters:
    *
    * - `rideDto`: rideDto
@@ -591,6 +639,22 @@ module CommandResourceService {
      * rateAndReview
      */
     rateAndReview: RateAndReview;
+  }
+
+  /**
+   * Parameters for sendStatusToCustomerUsingPOST
+   */
+  export interface SendStatusToCustomerUsingPOSTParams {
+
+    /**
+     * rideDto
+     */
+    rideDto: RideDTO;
+
+    /**
+     * status
+     */
+    status?: string;
   }
 
   /**

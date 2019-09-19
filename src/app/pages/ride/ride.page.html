@@ -32,8 +32,8 @@
   </div>
   <div>
     <ion-item *ngIf="isAccepted" >
-      <ion-text slot=start>manu Accepted </ion-text>
-      <ion-text slot=end (click)="presentModal()"> more info</ion-text>
+      <ion-text slot=start>DriverId : {{driverUserName}} Status :  {{status}} </ion-text>
+      <ion-text slot=end (click)="presentModal(driverUserName)"> more info</ion-text>
 
     </ion-item>
   </div>

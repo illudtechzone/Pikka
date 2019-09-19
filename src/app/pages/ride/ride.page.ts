@@ -11,6 +11,8 @@ import { GoogleMap, Environment, GoogleMapOptions, GoogleMaps, Marker, GoogleMap
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { UtilService } from 'src/app/services/util.service';
 import { InvoiceComponent } from 'src/app/components/invoice/invoice.component';
+import { JhiWebSocketService } from 'src/app/services/jhi-web-socket.service';
+import { DriverService } from 'src/app/services/driver.service';
 
 @Component({
   selector: 'app-ride',
@@ -18,9 +20,10 @@ import { InvoiceComponent } from 'src/app/components/invoice/invoice.component';
   styleUrls: ['./ride.page.scss'],
 })
 export class RidePage implements OnInit {
-
+  status: string;
   isRequest = false;
-  isAccepted=false;
+  isAccepted = false;
+  driverUserName:string;
   isVehicleList = true;
   mapCanvas: GoogleMap;
   lat = 10.754090;
@@ -39,28 +42,34 @@ export class RidePage implements OnInit {
               private toastController: ToastController,
               private currentUserService: CurrentUserService,
               private locationService: LocationService,
-              private notificationService:NotificationService) {}
+              private notificationService: NotificationService,
+              private jhiNotification: JhiWebSocketService,
+              private driverService: DriverService) {}
   ngOnInit() {
-   this.processInstanceId = this.activityService.getProcessInstanceId();
-   this.locationService.getDiractions().then(
-    (data: any) => {
-      this.routePoints = data.points;
-      this.currentUserService.getRoute().distance=data.distance;
-      console.log('>>>got diggstance and points >>>>', data.distance);
+    this.jhiNotification.subscribe();
+    this.jhiNotification.receive().subscribe(data => {
+    this.driverService.isAccepted = true;
+    this.driverService.driverUserName = data.rideDTO.driverId;
+    this.driverUserName = this.driverService.driverUserName;
+    this.isAccepted = this.driverService.isAccepted;
+    this.status = data.status;
+    if(this.status == 'payment completed')
+    {
+      console.log("payment completed");
+      this.driverService.clearDriverDetails();
+      this.navController.navigateRoot('/home');
+  }
 
-      console.log('>>>got route points >>>>', data);
-      console.log('>>>got route points >>>>', this.routePoints);
-      this.showMap();
-    }
-    );
+ });
 
   }
 
 
-  async presentModal() {
+  async presentModal(id: string) {
     console.log('koiii');
     const modal = await this.modalController.create({
       component: DriverDetialsComponent,
+     componentProps:{ driverId: id}
     });
     return await modal.present();
   }
@@ -81,16 +90,16 @@ export class RidePage implements OnInit {
       component: InvoiceComponent,
     });
     await modal.present();
-     const { data } = await modal.onWillDismiss();
-     if(data.response==='confirm'){
-      this.requestVehicle(vehicle);
+    const { data } = await modal.onWillDismiss();
+    if (data.response === 'confirm') {
+      this.requestVehicle(vehicle, data.distance, data.fare);
      }
     console.log(data);
 
   }
 
 
-  requestVehicle(vehicle) {
+  requestVehicle(vehicle, distance: number, fare: number) {
     this.util.createLoader()
       .then(loader => {
         loader.present();
@@ -98,7 +107,9 @@ export class RidePage implements OnInit {
         rideDTo.driverId = vehicle.iDPcode;
         rideDTo.addressDestination = this.currentUserService.getRoute().toAddress;
         rideDTo.addressStartingPoint = this.currentUserService.getRoute().fromAddress;
-        rideDTo.totalDistance = 10;
+        rideDTo.totalDistance = distance;
+        rideDTo.fare = fare;
+        rideDTo.riderId = this.currentUserService.getUser().login;
         this.commandResourceService.sendRequestToDriverUsingPOST({rideDto: rideDTo, processInstanceId: this.processInstanceId}).subscribe(
       data => {
         console.log('Send Request Status ', data);
@@ -121,12 +132,15 @@ export class RidePage implements OnInit {
   //   this.isAccepted=this.notificationService.getStatus();
   //   this.processInstanceId = this.activityService.getProcessInstanceId();
   ionViewWillEnter() {
-    this.isAccepted=this.notificationService.getStatus();
+
+    this.isAccepted = this.driverService.isAccepted;
+    this.driverUserName = this.driverService.driverUserName;
     this.processInstanceId = this.activityService.getProcessInstanceId();
 
     this.locationService.getDiractions().then(
       (data: any) => {
-        this.routePoints = data;
+        this.routePoints = data.points;
+        this.currentUserService.getRoute().distance = data.distance;
         console.log('>>>got route points >>>>', data);
         console.log('>>>got route points >>>>', this.routePoints);
         this.currentLocation();
@@ -188,7 +202,7 @@ showMap() {
             });
           });
         });
-this.getVehicles();
+      this.getVehicles();
       }
 
   getVehicles() {

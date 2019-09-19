@@ -66,7 +66,7 @@ export class JhiWebSocketService {
 
   subscribe() {
       this.connection.then(() => {
-          this.subscriber = this.stompClient.subscribe('/user/topic/reply', data => {
+          this.subscriber = this.stompClient.subscribe('/user/topic/review', data => {
               this.listenerObserver.next(JSON.parse(data.body));
           });
       });

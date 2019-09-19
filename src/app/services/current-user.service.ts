@@ -1,6 +1,7 @@
 import { RouteLocations } from './../dtos/route-locations';
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { RiderDTO, UserDTO } from '../api/models';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +9,16 @@ import { OAuthService } from 'angular-oauth2-oidc';
 export class CurrentUserService {
   user: any;
   routeLocation: RouteLocations = new RouteLocations();
-
+  rider:UserDTO;
   constructor(private oathservice: OAuthService) {}
+setUser(rider:UserDTO)
+{
+  this.rider=rider;
+}
+getUser()
+{
+  return this.rider;
+}
 
   getCurrentUser(force: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
