@@ -23,7 +23,8 @@ export class RidePage implements OnInit {
   status: string;
   isRequest = false;
   isAccepted = false;
-  driverUserName:string;
+  driverCompleted = false;
+  driverUserName: string;
   isVehicleList = true;
   mapCanvas: GoogleMap;
   lat = 10.754090;
@@ -52,13 +53,39 @@ export class RidePage implements OnInit {
     this.driverService.driverUserName = data.rideDTO.driverId;
     this.driverUserName = this.driverService.driverUserName;
     this.isAccepted = this.driverService.isAccepted;
-    this.status = data.status;
-    if(this.status == 'payment completed')
-    {
-      console.log("payment completed");
+
+    if (data.status === 'payment completed') {
+      this.status = data.status;
+      console.log('payment completed');
+
+      this.presentModal(data.rideDTO.driverId);
+
       this.driverService.clearDriverDetails();
       this.navController.navigateRoot('/home');
   }
+    if (data.status === 'accept') {
+    this.status = 'Driver Accepted';
+    console.log('Driver Accepted');
+
+  }
+    if (data.status === 'ridestarted') {
+    this.status = 'Ride Started';
+    console.log('Driver Ride  Started');
+
+  }
+    if (data.status === 'ridecompleted') {
+      this.driverService.driverCompleted = true;
+      this.driverCompleted = this.driverService.driverCompleted;
+      this.status = 'Ride Completed';
+      console.log('Driver Ride  Completed');
+
+  }
+
+
+
+
+
+
 
  });
 
@@ -69,7 +96,7 @@ export class RidePage implements OnInit {
     console.log('koiii');
     const modal = await this.modalController.create({
       component: DriverDetialsComponent,
-     componentProps:{ driverId: id}
+     componentProps: { driverId: id}
     });
     return await modal.present();
   }
@@ -88,6 +115,7 @@ export class RidePage implements OnInit {
     console.log('koiii');
     const modal = await this.modalController.create({
       component: InvoiceComponent,
+      componentProps:{lastInvoice:false}
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();
@@ -135,6 +163,7 @@ export class RidePage implements OnInit {
 
     this.isAccepted = this.driverService.isAccepted;
     this.driverUserName = this.driverService.driverUserName;
+    this.driverCompleted = this.driverService.driverCompleted;
     this.processInstanceId = this.activityService.getProcessInstanceId();
 
     this.locationService.getDiractions().then(

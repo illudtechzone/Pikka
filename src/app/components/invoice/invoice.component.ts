@@ -1,6 +1,6 @@
 import { LocationService } from './../../services/location.service';
 import { CurrentUserService } from './../../services/current-user.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Invoice } from 'src/app/dtos/invoice';
 
@@ -16,16 +16,18 @@ export class InvoiceComponent implements OnInit {
               private  modalCtrl: ModalController,
               private locationService:LocationService) { }
   invoice: Invoice =new Invoice();
+  @Input()
+  lastInvoice:boolean;
   ngOnInit() {
     const route = this.currentUserService.getRoute();
     this.invoice.pickupAddress = route.fromAddress;
     this.invoice.destAddress = route.toAddress;
-    this.invoice.distance = route.distance;
+    this.invoice.distance = route.distance.split(' ')[0];
     console.log('4>>',route.distance);
     console.log('1>>',(this.invoice.distance.split(' ')[0]));
-    console.log('2>>',(parseFloat((this.invoice.distance.split(' ')[0])) * 2));
+    console.log('2>>',(parseFloat((route.distance.split(' ')[0])) * 2));
     console.log('3>>',this.invoice.distance);
-    this.invoice.totel = parseFloat((this.invoice.distance.split(' ')[0])) * 2+'';
+    this.invoice.totel = parseFloat((route.distance.split(' ')[0])) * 2+'';
   }
 
 
@@ -35,7 +37,7 @@ export class InvoiceComponent implements OnInit {
     this.modalCtrl.dismiss({
       dismissed: true,
       response: response,
-      distance: parseFloat((this.invoice.distance.split(' ')[0])),
+      distance: parseFloat(this.invoice.distance),
       fare: this.invoice.totel
     });
   }

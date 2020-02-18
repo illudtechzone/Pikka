@@ -9,6 +9,7 @@ export class DriverService {
 
   driverUserName: any;
   isAccepted = false;
+  driverCompleted=false;
   driver: DriverDTO = {};
   constructor(private queryResource: QueryResourceService, private commandResource: CommandResourceService) {
   }
@@ -17,6 +18,7 @@ export class DriverService {
     this.driverUserName = undefined;
     this.isAccepted = false;
     this.driver = undefined;
+    this.driverCompleted=false;
   }
   addDriverDetails(idpCode) {
   this.driver.iDPcode = idpCode;

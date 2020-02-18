@@ -12,7 +12,7 @@ export class DriverDetialsComponent implements OnInit {
 name: string;
 @Input()
 driverId: any;
-driverDto: DriverDTO;
+driverDto: DriverDTO={};
 
   constructor(private modalCtrl: ModalController,
               private navCtrl: NavController,

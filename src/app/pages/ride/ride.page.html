@@ -31,10 +31,20 @@
     </ion-item>
   </div>
   <div>
-    <ion-item *ngIf="isAccepted" >
-      <ion-text slot=start>DriverId : {{driverUserName}} Status :  {{status}} </ion-text>
-      <ion-text slot=end (click)="presentModal(driverUserName)"> more info</ion-text>
+    <ion-toolbar  *ngIf="(isAccepted)"  color="success">
+    <h4 text-center>{{status|uppercase}}</h4>
+    <ion-text slot="end" (click)="presentModal(driverUserName)"> More info
+      <ion-icon  name="arrow-dropup" ></ion-icon>
+    </ion-text>
 
-    </ion-item>
+  </ion-toolbar>
+<div *ngIf="(driverCompleted)">
+<app-invoice [lastInvoice]="true">
+
+</app-invoice>
+</div>
+
+
+
   </div>
 </ion-footer>

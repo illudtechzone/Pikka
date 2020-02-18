@@ -2,10 +2,10 @@
 <ion-card (click)="dismiss()">
   <ion-card-header>
     <ion-card-title text-center>
-      charge
+    Invoice
     </ion-card-title>
     <ion-card-content>
-        
+
           <ion-item lines="none">
             <ion-text slot="start">From     :</ion-text>
             <ion-text slot="end"> {{invoice.pickupAddress}}</ion-text>
@@ -16,14 +16,14 @@
           </ion-item>
           <ion-item lines="none">
             <ion-text slot="start">Distance :</ion-text>
-            <ion-text slot="end">{{invoice.distance}}</ion-text>
+            <ion-text slot="end">{{invoice.distance}} KM </ion-text>
           </ion-item>
           <ion-item lines="full">
 
-                <ion-text slot="start">Totel cost : </ion-text>
-            <ion-text slot="end">{{invoice.totel}} rs</ion-text>
+                <ion-text slot="start">Fare : </ion-text>
+            <ion-text slot="end">INR {{invoice.totel}} </ion-text>
           </ion-item>
-          <div>
+          <div *ngIf="!lastInvoice">
               <ion-row>
                   <ion-col>
                     <ion-button (click)="dismiss('confirm')"  color="primary" expand="block">confirm</ion-button>

@@ -49,6 +49,7 @@
     "decode-google-map-polyline": "^1.0.1",
     "keycloak-admin": "^1.12.0",
     "net": "^1.0.2",
+    "ng2-adsense": "^6.0.0",
     "rxjs": "~6.5.1",
     "stompjs": "^2.3.3",
     "tslib": "^1.9.0",
